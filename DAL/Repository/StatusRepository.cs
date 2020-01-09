@@ -29,7 +29,7 @@ namespace DAL.Repository
             throw new NotImplementedException();
         }
 
-        public async void Delete(int id)
+        public async void Delete(int ? id)
         {
             var path = await context.Statuses.FindAsync(id);
             if (path != null)
@@ -40,10 +40,11 @@ namespace DAL.Repository
 
         }
 
-        public void Delete(int? id)
+        public void Delete(Status status)
         {
-            throw new NotImplementedException();
+            context.Remove(status);
         }
+       
 
         public async Task<Status> Get(int? id)
         {

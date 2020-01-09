@@ -34,8 +34,20 @@ namespace DAL.Repository
             
             context.Files.Remove(item);
         }
+        public void Delete(int? id)
+        {
+            var file = Get(id).Result;
+            if (file != null)
+            {
+                context.Files.Remove(file);
+            }
+            else
+            {
+                //todo :
+            }
+        }
 
-      
+
         public async Task<File> Get(int? id)
         {
             File file = await context.Files.Include(x => x.Link)

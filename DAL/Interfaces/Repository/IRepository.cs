@@ -13,6 +13,7 @@ namespace DAL.Interfaces.Repository
         void Create(T item);
         void Update(T item);
         void Delete(T item);
+        void Delete(int? id);
         Task<IEnumerable<T>> GetList();
         Task<IEnumerable<T>> Query(Expression<Func<T, bool>> filter);
         Task<T> Get(Expression<Func<T, bool>> filter);

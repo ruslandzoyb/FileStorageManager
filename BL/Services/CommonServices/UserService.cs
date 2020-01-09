@@ -97,7 +97,7 @@ namespace BL.Services.CommonServices
     {
             var files = database.Files.Query(x => x.User.IdenityId == user_id).Result;
             var file = files.First(x => x.Id == id);
-        database.Files.Delete(id);
+        database.Files.Delete(file);
         database.Save();
         return true;
         //todo :Delete !!!

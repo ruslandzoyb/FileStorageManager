@@ -28,20 +28,22 @@ namespace DAL.Repository
             }
         }
         //Todo :add else block
-        public void Delete(int id)
+        public void Delete(int? id)
         {
-            var link = context.Links.Find(id);
+            var link = Get(id).Result;
             if (link != null)
             {
                 context.Links.Remove(link);
             }
+            else
+            {
+                //todo :
+            }
         }
-
-        public void Delete(int? id)
+        public void Delete(Link link)
         {
-            throw new NotImplementedException();
+            context.Links.Remove(link);
         }
-
         public async Task<Link> Get(int? id)
         {
             var link = await context.Links.FindAsync(id);

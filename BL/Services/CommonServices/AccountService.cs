@@ -47,6 +47,7 @@ namespace BL.Services.CommonServices
             {
                 Email = user.Email,
                 FullName = user.FullName,
+                
                
                 
             };

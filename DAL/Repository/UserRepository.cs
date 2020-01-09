@@ -41,6 +41,10 @@ namespace DAL.Repository
                 //todo :
             }
         }
+        public void Delete(User user)
+        {
+            context.Users.Remove(user);
+        }
 
         public async Task<User> Get(int? id)
         {
