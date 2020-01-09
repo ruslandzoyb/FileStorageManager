@@ -7,7 +7,7 @@ using System.Text;
 
 namespace BL.Interfaces.OrdersInterfaces
 {
-   public interface IAdminService:IUserService
+   public interface IAdminService
     {
         UserDTO GetUser(int? id);
         ApplicationUserDTO GetUserInfo(int? id);

@@ -20,8 +20,8 @@ namespace API.Controllers
     public class UserController : ControllerBase
     {
 
-       private IUserService service;
-       private IMapper mapper;
+       protected IUserService service;
+       protected IMapper mapper;
 
         public UserController(IUserService service)
         {
@@ -83,6 +83,7 @@ namespace API.Controllers
         {
             var upload = mapper.Map<BL.ModelsDTO.OtherModels.FileUploadModel>(model);
             service.Upload(upload);
+            return Ok();
         }
     }
   
