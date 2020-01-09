@@ -10,10 +10,14 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 using System.Linq;
+using System.IO;
+using File = DAL.Models.CommonModels.File;
+using System.Xml;
+using BL.Configuration;
 
 namespace BL.Services.CommonServices
 {
-   public class UserService:IUserService,ILinkService
+   public class UserService:IUserService
     {
         protected IUnitOfWork database;
          protected IMapper mapper;
@@ -199,14 +203,58 @@ namespace BL.Services.CommonServices
 
 
 
-    public bool Upload(FileDownloadModel file)
-    {
+        public string Upload(FileUploadModel file)
+        {
+            
+            var element = file.File;
+            var format = element.ContentType;
+            var username = file.UserId + " Storage";
+            string directory_path= PathConfiguration.storage + @"\" + username;
+            if (!Directory.Exists(directory_path))
+            {
+                directory_path = PathConfiguration.storage + @"\" + username;
+                Directory.CreateDirectory(directory_path);
+                  }
+
+            string path = directory_path + element.FileName;
+            if (element.Length > 0)
+            {
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    element.CopyTo(fileStream);
+                }
+
+            }
+            var status = database.Statuses.Get(x => x.Title == "Closed").Result;
+            var user = database.Users.Get(x => x.IdenityId == file.UserId).Result;
+            var type = database.Types.Get(x => x.Format == format).Result;
+            if (type==null)
+            {
+                type = new DAL.Models.CommonModels.Type()
+                {
+                    Format = format
+                };
+            }
+            var file_tosave = new File()
+            {
+                Status = status,
+                Description = file.Description,
+                User = user,
+                Name = file.Name,
+                Type = type,
+                Path = new DAL.Models.CommonModels.Path()
+                {
+                    Link = path
+                }
 
 
-        return true;
-    }
 
+            };
+            database.Files.Create(file_tosave);
+            database.Save();
 
+        }
+        
     public static Random r = new Random();
 }
 }

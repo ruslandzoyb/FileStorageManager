@@ -10,10 +10,12 @@ using BL.Interfaces.OrdersInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using API.Models;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = "User,Admin")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -56,17 +58,31 @@ namespace API.Controllers
         public IActionResult GetFiles()
         {
             int user_id = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var files = service.GetFiles(user_id);
+            var files = mapper.Map<FileModelView>(service.GetFiles(user_id));
             return Ok(files);
         }
 
        
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public IActionResult Delete(int id)
         {
             int user_id = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             service.Delete(id, user_id);
             return Ok("Deleted");
+        }
+
+        [HttpGet]
+        public IActionResult GetByLink(string link)
+        {
+            var file = mapper.Map<FileModelView>(service.GetPath(link));
+            return Ok(file);
+        }
+
+        [HttpPost]
+        public IActionResult Upload([FromBody] UploadFileViewModel model)
+        {
+            var upload = mapper.Map<BL.ModelsDTO.OtherModels.FileUploadModel>(model);
+            service.Upload(upload);
         }
     }
   

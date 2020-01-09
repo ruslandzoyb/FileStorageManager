@@ -8,11 +8,11 @@ using System.Text;
 
 namespace BL.Interfaces.OrdersInterfaces
 {
-    public interface IUserService
+    public interface IUserService:ILinkService
     {
         FileDTO GetFile(int? id,int user_id);
         IEnumerable<FileDTO> GetFiles(int? user_id);
-        bool Upload(FileDownloadModel file);
+        string Upload(FileUploadModel file);
 
         bool Delete(int? id,int user_id);
         ChangeStatusView ChangeStatus(ChangeStatusModel model);// id,status;
