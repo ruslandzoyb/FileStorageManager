@@ -29,17 +29,13 @@ namespace DAL.Repository
 
         }
 
-        public void Delete(int id)
+        public void Delete(File item)
         {
-            var file = context.Files.Find(id);
-            context.Files.Remove(file);
+            
+            context.Files.Remove(item);
         }
 
-        public void Delete(int? id)
-        {
-            context.Users.RemoveRange(context.Users);
-        }
-
+      
         public async Task<File> Get(int? id)
         {
             File file = await context.Files.Include(x => x.Link)

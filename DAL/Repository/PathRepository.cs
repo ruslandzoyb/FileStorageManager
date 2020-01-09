@@ -29,13 +29,12 @@ namespace DAL.Repository
             //throw new NotImplementedException();
         }
 
-        public async void Delete(int id)
+        public  void Delete(Path path)
         {
-            var path = await context.Paths.FindAsync(id);
-            if (path != null)
-            {
-                context.Paths.Remove(path);
-            }
+            
+            
+                 context.Paths.Remove(path);
+            
             //todo :ex
 
         }

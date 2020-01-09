@@ -19,6 +19,7 @@ namespace BL.Configuration.Mapper
             CreateMap<Link, LinkDTO>().ReverseMap();
             CreateMap<Status, StatusDTO>().ReverseMap();
             CreateMap<Path, PathDTO>().ReverseMap();
+            
 
         }
     }

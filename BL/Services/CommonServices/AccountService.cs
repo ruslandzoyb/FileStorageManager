@@ -86,6 +86,7 @@ namespace BL.Services.CommonServices
                     if (delete.Succeeded)
                     {
                         database.Users.Delete(model.Id);
+                        database.Save();
                         return new string($"User {name} account was deleted cause of {model.Reason} ");
                     }
                     else

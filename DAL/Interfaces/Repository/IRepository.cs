@@ -12,7 +12,7 @@ namespace DAL.Interfaces.Repository
         Task<T> Get(int? id);
         void Create(T item);
         void Update(T item);
-        void Delete(int? id);
+        void Delete(T item);
         Task<IEnumerable<T>> GetList();
         Task<IEnumerable<T>> Query(Expression<Func<T, bool>> filter);
         Task<T> Get(Expression<Func<T, bool>> filter);

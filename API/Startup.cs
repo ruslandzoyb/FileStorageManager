@@ -68,11 +68,13 @@ namespace API
             services.Configure<IdentityOptions>(options =>
             {
 
-                options.Password.RequireDigit = false;
-                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = true;
+                options.Password.RequireNonAlphanumeric = true;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
-                options.Password.RequiredLength = 4;
+                options.Password.RequiredLength = 8;
+
+                
             });
             services.AddCors();
         }

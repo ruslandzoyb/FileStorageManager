@@ -10,15 +10,15 @@ namespace BL.Interfaces.OrdersInterfaces
 {
     public interface IUserService
     {
-        FileDTO GetFile(int? id);
+        FileDTO GetFile(int? id,int user_id);
         IEnumerable<FileDTO> GetFiles(int? user_id);
         bool Upload(FileDownloadModel file);
 
-        bool Delete(int? id);
+        bool Delete(int? id,int user_id);
         ChangeStatusView ChangeStatus(ChangeStatusModel model);// id,status;
 
         IEnumerable<FileDTO> Find(Expression<Func<File, bool>> predicate);
-        string InfoByFile(int? id); // model -file info , id -file id
+        string InfoByFile(int? id,int user_id); // model -file info , id -file id
 
         // Additional
         //void MakeCommon(Model model); //email,file id

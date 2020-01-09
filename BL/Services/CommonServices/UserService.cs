@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
+using System.Linq;
 
 namespace BL.Services.CommonServices
 {
@@ -92,25 +93,36 @@ namespace BL.Services.CommonServices
 
     }
 
-    public bool Delete(int? id)
+    public bool Delete(int? id,int user_id)
     {
+            var files = database.Files.Query(x => x.User.IdenityId == user_id).Result;
+            var file = files.First(x => x.Id == id);
         database.Files.Delete(id);
+        database.Save();
         return true;
         //todo :Delete !!!
     }
 
-    public FileDTO Download(int? id)
+    public FileDownloadModel Download(string link)
     {
-        var file = mapper.Map<FileDTO>(database.Files.Get(id));
-        if (file != null)
-        {
-            return file;
+            var file = mapper.Map<FileDTO>(database.Links.Get(x => x.Code == link).Result.File);
+            if (file != null)
+            {
+                var download = new FileDownloadModel()
+                {
+                    Array = System.IO.File.ReadAllBytes(file.Path.Link),
+                    Name = file.Name,
+                    Type = file.Type.Format
+                };
+                //todo :Ex
+                return download != null ? download : throw new Exception();
+            }
+            else
+            {
+                //todo :Ex
+                throw new Exception();
+            }
         }
-        else
-        {
-            throw new Exception();
-        }
-    }
 
     public IEnumerable<FileDTO> Find(Expression<Func<File, bool>> predicate)
     {
@@ -125,14 +137,11 @@ namespace BL.Services.CommonServices
         }
     }
 
-    //public FileDTO GetCommon(int? id)
-    //{
-    //    throw new NotImplementedException();
-    //}
+    
 
-    public FileDTO GetFile(int? id)
+    public FileDTO GetFile(int? id,int user_id)
     {
-        var file = mapper.Map<FileDTO>(database.Files.Get(id));
+        var file = mapper.Map<FileDTO>(database.Users.Get(user_id).Result.Files.Where(x=>x.Id==id));
         if (file != null)
         {
             return file;
@@ -172,7 +181,7 @@ namespace BL.Services.CommonServices
 
     }
 
-    public string InfoByFile(int? id)
+    public string InfoByFile(int? id,int user_id)
     {
         var file = mapper.Map<FileDTO>(database.Files.Get(id).Result);
         if (file != null)

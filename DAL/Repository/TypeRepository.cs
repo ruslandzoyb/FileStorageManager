@@ -28,9 +28,9 @@ namespace DAL.Repository
             }
         }
 
-        public async void Delete(int id)
+        public  void Delete(Type type)
         {
-            var type = await context.Types.FindAsync(id);
+           // var type = await context.Types.FindAsync(id);
             context.Types.Remove(type);
 
         }
