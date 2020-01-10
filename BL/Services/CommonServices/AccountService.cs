@@ -43,18 +43,27 @@ namespace BL.Services.CommonServices
 
         public bool CreateUser(ApplicationUserDTO user)
         {
-          var us=  new ApplicationUser()
+            var us = new ApplicationUser()
             {
                 Email = user.Email,
                 FullName = user.FullName,
-                
-               
-                
+                UserName=user.FullName
+
+
+
             };
-          var create=  userManager.CreateAsync(us, user.Password).Result;
+            var go = rolesManger.CreateAsync(new IdentityRole()
+            {
+                Name = "User"
+
+            }).Result;
+            var create = userManager.CreateAsync(us, user.Password).Result;
+          
+            
             var roles = userManager.AddToRolesAsync(us, user.Roles).Result;
             if (create.Succeeded&&roles.Succeeded)
             {
+                
                 database.Users.Create(mapper.Map<User>(new UserDTO()
                 {
                     IdenityId = Convert.ToInt32((userManager.GetUserIdAsync(us).Result))

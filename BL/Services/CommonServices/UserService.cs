@@ -22,15 +22,12 @@ namespace BL.Services.CommonServices
         protected IUnitOfWork database;
          protected IMapper mapper;
 
-    protected UserService(IUnitOfWork database)
+    public UserService(IUnitOfWork database)
     {
         this.database = database;
         mapper = new MapperConfiguration(ctg => ctg.AddProfile(new MapperSet())).CreateMapper();
     }
-        public UserService()
-        {
-
-        }
+        
 
     public ChangeStatusView ChangeStatus(ChangeStatusModel model)
     {
@@ -172,11 +169,11 @@ namespace BL.Services.CommonServices
 
     public FileDTO GetPath(string link)
     {
-        var l = mapper.Map<FileDTO>(database.Links.Get(x => x.Code == link).Result.File);
-
-        if (l != null)
+        var l = (database.Links.Get(x => x.Code == link).Result.Id);
+            var el = mapper.Map<FileDTO>( database.Files.Get(x => x.Link.Id == l).Result);
+        if (el != null)
         {
-            return l;
+            return el;
         }
         else
         {
@@ -205,7 +202,7 @@ namespace BL.Services.CommonServices
 
         public string Upload(FileUploadModel file)
         {
-            
+            file.UserId = 914;
             var element = file.File;
             var format = element.ContentType;
             var username = file.UserId + " Storage";
@@ -216,7 +213,7 @@ namespace BL.Services.CommonServices
                 Directory.CreateDirectory(directory_path);
                   }
 
-            string path = directory_path + element.FileName;
+            string path = directory_path +@"\"+ element.FileName;
             if (element.Length > 0)
             {
                 using (var fileStream = new FileStream(path, FileMode.Create))
@@ -227,7 +224,7 @@ namespace BL.Services.CommonServices
             }
             var status = database.Statuses.Get(x => x.Title == "Closed").Result;
             var user = database.Users.Get(x => x.IdenityId == file.UserId).Result;
-            var type = database.Types.Get(x => x.Format == format).Result;
+            DAL.Models.CommonModels.Type type= new DAL.Models.CommonModels.Type();// database.Types.Get(x => x.Format == format).Result;
             if (type==null)
             {
                 type = new DAL.Models.CommonModels.Type()
@@ -252,9 +249,15 @@ namespace BL.Services.CommonServices
             };
             database.Files.Create(file_tosave);
             database.Save();
-
+            throw new Exception();
         }
-        
-    public static Random r = new Random();
+
+        public IEnumerable<FileDTO> GetList()
+        {
+          var r=mapper.Map<List<FileDTO>>(database.Files.GetList().Result.ToList());
+            return r;
+        }
+
+        public static Random r = new Random();
 }
 }

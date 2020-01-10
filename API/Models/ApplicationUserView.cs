@@ -8,7 +8,7 @@ namespace API.Models
 {
     public class ApplicationUserView
     {
-        public int Id { get; set; }
+       // public int Id { get; set; }
 
 
 
@@ -20,7 +20,7 @@ namespace API.Models
 
 
         [Required]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W]).{8,}$", ErrorMessage = "The {0} does not meet requirements.")]
+        
         [StringLength(15,MinimumLength =8,ErrorMessage ="Password is not of corect size")]
         [DataType(DataType.Password)]
         [Display(Name ="Password")]
@@ -36,6 +36,6 @@ namespace API.Models
 
 
 
-        public IList<string> Roles { get; set; }
+       // public IList<string> Roles { get; set; }
     }
 }

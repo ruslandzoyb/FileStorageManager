@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using BL.Interfaces.OrdersInterfaces;
 using Microsoft.AspNetCore.Authorization;
+using DAL.UOW;
 
 namespace API.Controllers
 {
@@ -22,19 +23,20 @@ namespace API.Controllers
     {
         private IAccountService service;
         private IMapper mapper;
-
+        private UnitOfWork unit;
         public AccountController(IAccountService service)
         {
             this.service = service;
             mapper = new MapperConfiguration(ctr => ctr.AddProfile(new API.Mapper.MapperSetAPI())).CreateMapper();
-           
+            //file = new DAL.Repository.FileRepository(new DAL.Context.ApplicationContext());
+            unit = new UnitOfWork(new DAL.Context.ApplicationContext());
         }
         // GET: api/Account
         
 
         [HttpPost]
-        [Route("Login")]
-        public IActionResult Register ([FromBody] ApplicationUserView model)
+        [Route("Register")]
+        public IActionResult Register ([FromForm] ApplicationUserView model)
         {
 
 
@@ -57,14 +59,14 @@ namespace API.Controllers
             else
             {
                 //todo:Ex
-                return NotFound();
+                return NoContent();
             }
 
         }
 
         [HttpGet]
         [Route("Login")]
-        public IActionResult Login([FromBody] LoginModelView model)
+        public IActionResult Login([FromForm] LoginModelView model)
         {
             if (ModelState.IsValid)
             {
@@ -79,6 +81,12 @@ namespace API.Controllers
             }
         }
 
+        //[HttpGet]
+        //[Route("Hi")]
+        //public string Get()
+        //{
+        //    return "Hello bitch";
+        //}
 
 
         [HttpDelete]
@@ -98,6 +106,17 @@ namespace API.Controllers
             }
         }
           
-       
+       [HttpGet]
+       [Route("Get")]
+       public IActionResult Post()
+        {
+            var file = "";
+            return Ok(file);
+        }
+    }
+   public class MyClass
+    {
+        public string Id { get; set; }
+        public int Name { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using API.Models;
+using API.Models.CommonModels;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,13 @@ namespace API.Mapper
             CreateMap<DeleteAccModelView, BL.ModelsDTO.OtherModels.DeleteAccModel>().ReverseMap();
             CreateMap<UploadFileViewModel, BL.ModelsDTO.OtherModels.FileUploadModel>().ReverseMap();
             CreateMap<RoleViewModel, BL.ModelsDTO.OtherModels.RoleModel>().ReverseMap();
+
+            CreateMap<LinkViewModel, BL.ModelsDTO.FileManageDTO.LinkDTO>().ReverseMap();
+            CreateMap<PathViewModel, BL.ModelsDTO.FileManageDTO.PathDTO>().ReverseMap();
+            CreateMap<TypeVievModel, BL.ModelsDTO.FileManageDTO.TypeDTO>().ReverseMap();
+            CreateMap<StatusViewModel, BL.ModelsDTO.FileManageDTO.StatusDTO>().ReverseMap();
+            CreateMap<UserViewModel, BL.ModelsDTO.FileManageDTO.UserDTO>().ReverseMap();
+            CreateMap<FileModelView, BL.ModelsDTO.FileManageDTO.FileDTO>().ReverseMap();
         }
 
     }

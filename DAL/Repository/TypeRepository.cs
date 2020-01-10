@@ -45,9 +45,9 @@ namespace DAL.Repository
             return await context.Types.FindAsync(id);
         }
 
-        public Task<Type> Get(Expression<Func<Type, bool>> filter)
+        public async Task<Type> Get(Expression<Func<Type, bool>> filter)
         {
-            throw new NotImplementedException();
+            return await context.Types.Where(filter).FirstAsync();
         }
 
         public async Task<IEnumerable<Type>> GetList()

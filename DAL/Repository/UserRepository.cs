@@ -64,18 +64,18 @@ namespace DAL.Repository
 
         }
 
-        public Task<User> Get(Expression<Func<User, bool>> filter)
+        public async Task<User> Get(Expression<Func<User, bool>> filter)
         {
-            throw new NotImplementedException();
+           return await context.Users.Where(filter).FirstAsync();
         }
 
         public async Task<IEnumerable<User>> GetList()
         {
             var users = await context.Users
-                .Include(x => x.Files).ThenInclude(y => y.Link)
-                .Include(x => x.Files).ThenInclude(y => y.Path)
-                .Include(x => x.Files).ThenInclude(y => y.Type)
-                .Include(x => x.Files).ThenInclude(y => y.Status)
+                //.Include(x => x.Files).ThenInclude(y => y.Link)
+                //.Include(x => x.Files).ThenInclude(y => y.Path)
+                //.Include(x => x.Files).ThenInclude(y => y.Type)
+                //.Include(x => x.Files).ThenInclude(y => y.Status)
                 .ToListAsync();
             if (users != null)
             {

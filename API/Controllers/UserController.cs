@@ -15,7 +15,7 @@ using API.Models;
 namespace API.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Roles = "User,Admin")]
+   // [Authorize(Roles = "User,Admin")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -31,7 +31,7 @@ namespace API.Controllers
         }
       
         [HttpGet]
-        [Authorize(Roles ="User,Admin")]
+        [Authorize(Roles ="Admin")]
         public IActionResult GetFile(int? id)
         {
            int user_id = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -43,22 +43,26 @@ namespace API.Controllers
               
              
         [HttpGet]
-        [Authorize(Roles = "User,Admin")]
-        public IActionResult FileInfo(int ?id)
+        
+       [Authorize(Roles ="Admin")]
+        [Route("Go")]
+        public IActionResult FileInfo()
         {
-            int user_id = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+           // int user_id = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-           var info= service.InfoByFile(id, user_id);
-            return Ok(info);
+           //var info= service.InfoByFile(id, user_id);
+            return Ok("Hello suka");
         }
 
         
         [HttpGet]
-        [Authorize(Roles = "User,Admin")]
+        [Route("Files")]
+      [Authorize(Roles ="User")]
         public IActionResult GetFiles()
         {
-            int user_id = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var files = mapper.Map<FileModelView>(service.GetFiles(user_id));
+           // int user_id = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var files = mapper.Map<List<FileModelView>>(service.GetList().ToList());
             return Ok(files);
         }
 
@@ -72,6 +76,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Route("ByLink")]
         public IActionResult GetByLink(string link)
         {
             var file = mapper.Map<FileModelView>(service.GetPath(link));
@@ -79,7 +84,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Upload([FromBody] UploadFileViewModel model)
+        public IActionResult Upload([FromForm] UploadFileViewModel model)
         {
             var upload = mapper.Map<BL.ModelsDTO.OtherModels.FileUploadModel>(model);
             service.Upload(upload);

@@ -18,10 +18,13 @@ namespace BL.Configuration.TokenServices
                 var tokendesc = new SecurityTokenDescriptor
                 {
                     Subject = claims,
-                    Expires = DateTime.UtcNow.AddMinutes(AuthOptions.LIFETIME),
-                    SigningCredentials = new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256Signature)
+                    Expires = DateTime.UtcNow.AddDays(AuthOptions.LIFETIME),
+                    SigningCredentials = new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256Signature),
+                    Issuer = "API",
+                    Audience = "Postman"
+                    
 
-
+                    
                 };
                 var tokenHandler = new JwtSecurityTokenHandler();
 

@@ -84,10 +84,10 @@ namespace DAL.Context
             modelBuilder.Entity<User>()
                 .HasKey(x => x.IdenityId);
 
-            modelBuilder.Entity<User>()
-                .Property(x => x.FullName)
-                .HasMaxLength(30)
-                .IsRequired();
+            //modelBuilder.Entity<User>()
+            //    .Property(x => x.FullName)
+            //    .HasMaxLength(30)
+            //    .IsRequired();
 
             modelBuilder.Entity<User>()
                 .Property(x => x.IdenityId)

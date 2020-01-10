@@ -19,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+
 using Microsoft.IdentityModel.Tokens;
 
 namespace API
@@ -37,22 +38,37 @@ namespace API
         {
 
             services.AddControllers();
+
+
+
             services.AddIdentityCore<ApplicationUser>().
                 AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<IdentityContext>();
             services.AddDbContext<IdentityContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
+            BL.Configuration.Injection.InfrastructureConfiguration.Configure(services);
+            services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IUserService, UserService>();
+            //  services.AddTransient<IAdminService, AdminService>();
 
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options => {
+            services.AddAuthentication(x => {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+
+            .AddJwtBearer(options => {
                 options.RequireHttpsMetadata = false;
+                   
+                    options.SaveToken = false;
+                    
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
-                        ValidIssuer = AuthOptions.ISSUER,
+                        ValidIssuer = "API",
                         ValidateAudience = true,
-                        ValidAudience = AuthOptions.AUDIENCE,
+                        ValidAudience = "Postman",
                         ValidateLifetime = true,
                         IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
                         ValidateIssuerSigningKey = true,
@@ -69,7 +85,7 @@ namespace API
             {
 
                 options.Password.RequireDigit = true;
-                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 8;
@@ -87,11 +103,12 @@ namespace API
                 app.UseDeveloperExceptionPage();
             }
 
+          
             app.UseRouting();
             // app.UseAuthentication();
             app.UseAuthentication();
             app.UseAuthorization();
-
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

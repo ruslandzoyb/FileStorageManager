@@ -10,6 +10,7 @@ namespace BL.Interfaces.OrdersInterfaces
 {
     public interface IUserService:ILinkService
     {
+        IEnumerable<FileDTO> GetList();
         FileDTO GetFile(int? id,int user_id);
         IEnumerable<FileDTO> GetFiles(int? user_id);
         string Upload(FileUploadModel file);

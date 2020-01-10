@@ -74,10 +74,11 @@ namespace DAL.Repository
         {
             return await context.Files.Include(x => x.Link)
                  .Include(x => x.Path)
-                 .Include(x => x.Status)
-                 .Include(x => x.Type)
-                 .Include(x => x.User)
+                .Include(x => x.Status)
+                .Include(x => x.Type)
+                .Include(x => x.User)
                  .ToListAsync();
+            //
 
         }
 

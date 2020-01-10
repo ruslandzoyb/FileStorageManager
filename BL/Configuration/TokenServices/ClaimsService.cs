@@ -1,4 +1,5 @@
 ﻿using DAL.Models.IdentityModels;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -23,14 +24,14 @@ namespace BL.Configuration.TokenServices
                 };
                 if (roles!=null)
                 {
-                    
+                    IdentityOptions _options = new IdentityOptions();
                     foreach (var item in roles)
                     {
-                        claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, item));
+                        claims.Add(new Claim(_options.ClaimsIdentity.RoleClaimType, item));
                     }
                     ClaimsIdentity claimsIdentity =
                 new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
-                    ClaimsIdentity.DefaultRoleClaimType);
+                    _options.ClaimsIdentity.RoleClaimType);
                     return claimsIdentity;
                 }
                 else

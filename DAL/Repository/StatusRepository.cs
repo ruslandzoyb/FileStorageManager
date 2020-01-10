@@ -60,9 +60,9 @@ namespace DAL.Repository
             }
         }
 
-        public Task<Status> Get(Expression<Func<Status, bool>> filter)
+        public async Task<Status> Get(Expression<Func<Status, bool>> filter)
         {
-            throw new NotImplementedException();
+          return await context.Statuses.Where(filter).FirstAsync(); 
         }
 
         public async Task<IEnumerable<Status>> GetList()

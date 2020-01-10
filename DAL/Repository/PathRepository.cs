@@ -65,7 +65,7 @@ namespace DAL.Repository
 
         public async Task<IEnumerable<Path>> GetList()
         {
-            var list = await context.Paths.ToListAsync();
+            var list = await context.Paths.Include(x=>x.File).ToListAsync();
             if (list != null)
             {
                 return list;
