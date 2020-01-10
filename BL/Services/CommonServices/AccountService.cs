@@ -46,32 +46,41 @@ namespace BL.Services.CommonServices
             var us = new ApplicationUser()
             {
                 Email = user.Email,
-                FullName = user.FullName,
-                UserName=user.FullName
-
+                Surname = user.Surname,
+                UserName=user.Name
+                                
 
 
             };
-            var go = rolesManger.CreateAsync(new IdentityRole()
+            var role = rolesManger.CreateAsync(new IdentityRole()
             {
                 Name = "User"
 
             }).Result;
+
             var create = userManager.CreateAsync(us, user.Password).Result;
+            if (create.Succeeded)
+            {
+                var roles = userManager.AddToRolesAsync(us, user.Roles).Result;
+                if (create.Succeeded && roles.Succeeded)
+                {
+
+                    database.Users.Create(mapper.Map<User>(new UserDTO()
+                    {
+                        IdenityId = userManager.GetUserIdAsync(us).Result
+                    }));
+                    database.Save();
+                    return true;
+
+                }
+                else
+                {
+                    return false;
+                }
+            }
           
             
-            var roles = userManager.AddToRolesAsync(us, user.Roles).Result;
-            if (create.Succeeded&&roles.Succeeded)
-            {
-                
-                database.Users.Create(mapper.Map<User>(new UserDTO()
-                {
-                    IdenityId = Convert.ToInt32((userManager.GetUserIdAsync(us).Result))
-                }));
-                database.Save();
-                return true;
-                
-            }
+            
             else
             {
                 return false;
@@ -91,13 +100,14 @@ namespace BL.Services.CommonServices
                 var user = userManager.FindByIdAsync(model.Id.ToString()).Result;
                 if (user!=null&&userManager.CheckPasswordAsync(user,model.Password).Result)
                 {
-                    var name = user.FullName;
+                    var name = user.UserName;
+                    var surname = user.Surname;
                     var delete = userManager.DeleteAsync(user).Result;
                     if (delete.Succeeded)
                     {
                         database.Users.Delete(model.Id);
                         database.Save();
-                        return new string($"User {name} account was deleted cause of {model.Reason} ");
+                        return new string($"User {name} {surname} account was deleted cause of {model.Reason} ");
                     }
                     else
                     {

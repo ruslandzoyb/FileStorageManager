@@ -4,6 +4,7 @@ using DAL.Models.IdentityModels;
 using DAL.UOW;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,20 @@ namespace BL.Configuration.Injection
     {
         public static void Configure(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationContext>();
+            
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<UserManager<ApplicationUser>>();
             services.AddTransient<IdentityContext>();
             
+            
+        }
+        public static void DbContext(IServiceCollection services,string connection,string id_connection)
+        {
+            services.AddDbContext<ApplicationContext>(options =>
+            options.UseSqlServer(connection)
+            ); ;
+            services.AddDbContext<IdentityContext>(options =>
+            options.UseSqlServer(id_connection));
         }
     }
 }

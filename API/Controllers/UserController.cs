@@ -44,20 +44,20 @@ namespace API.Controllers
              
         [HttpGet]
         
-       [Authorize(Roles ="Admin")]
+       //[Authorize(Roles ="User")]
         [Route("Go")]
         public IActionResult FileInfo()
         {
-           // int user_id = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var el = this.User.Identity.Name;
 
-           //var info= service.InfoByFile(id, user_id);
-            return Ok("Hello suka");
+          // var info= service.InfoByFile(id, user_id);
+            return Ok(el);
         }
 
         
         [HttpGet]
         [Route("Files")]
-      [Authorize(Roles ="User")]
+     // [Authorize(Roles ="User")]
         public IActionResult GetFiles()
         {
            // int user_id = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -70,8 +70,8 @@ namespace API.Controllers
         [HttpDelete]
         public IActionResult Delete(int id)
         {
-            int user_id = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            service.Delete(id, user_id);
+            var el = User.Identity.Name;
+           // service.Delete(id,);
             return Ok("Deleted");
         }
 
@@ -83,10 +83,31 @@ namespace API.Controllers
             return Ok(file);
         }
 
+
+        [HttpGet]
+        //[Authorize]
+        [Route("Download")]
+        public FileResult Download([FromRoute] string link)
+        {
+            var download = mapper.Map<DownloadViewModel>(service.Download(link));
+            if (download!=null)
+            {
+                return File(download.Array, download.Type, download.Name);
+            }
+            else
+            {
+                throw new Exception();
+            }
+        }
+
         [HttpPost]
+        [Authorize]
+        [Route("Upload")]
         public IActionResult Upload([FromForm] UploadFileViewModel model)
         {
+            
             var upload = mapper.Map<BL.ModelsDTO.OtherModels.FileUploadModel>(model);
+            upload.UserId = User.Identity.Name;
             service.Upload(upload);
             return Ok();
         }

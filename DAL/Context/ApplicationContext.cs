@@ -16,19 +16,14 @@ namespace DAL.Context
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Models.CommonModels.Type> Types { get; set; }
         public DbSet<User> Users { get; set; }
-        public ApplicationContext()
+        public ApplicationContext(DbContextOptions<ApplicationContext> options):base(options)
         {
             Database.EnsureCreated();
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public ApplicationContext()
         {
-            //var builder = new ConfigurationBuilder()
-            //    .SetBasePath(System.IO.Directory.GetCurrentDirectory())
-            //    .AddJsonFile("dalconfig.json", optional: true, reloadOnChange: true);
-            //var config = builder.Build();
 
-            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=FilesDB;Trusted_Connection=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

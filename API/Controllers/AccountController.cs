@@ -29,7 +29,7 @@ namespace API.Controllers
             this.service = service;
             mapper = new MapperConfiguration(ctr => ctr.AddProfile(new API.Mapper.MapperSetAPI())).CreateMapper();
             //file = new DAL.Repository.FileRepository(new DAL.Context.ApplicationContext());
-            unit = new UnitOfWork(new DAL.Context.ApplicationContext());
+            
         }
         // GET: api/Account
         

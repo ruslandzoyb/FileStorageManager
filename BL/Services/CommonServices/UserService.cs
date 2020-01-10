@@ -94,26 +94,27 @@ namespace BL.Services.CommonServices
 
     }
 
-    public bool Delete(int? id,int user_id)
+    public bool Delete(int? id,string user_id)
     {
             var files = database.Files.Query(x => x.User.IdenityId == user_id).Result;
             var file = files.First(x => x.Id == id);
-        database.Files.Delete(file);
-        database.Save();
+            database.Files.Delete(file);
+             database.Save();
         return true;
         //todo :Delete !!!
     }
 
-    public FileDownloadModel Download(string link)
+    public  FileDownloadModel Download(string link)
     {
-            var file = mapper.Map<FileDTO>(database.Links.Get(x => x.Code == link).Result.File);
+            var id =  database.Links.Get(x => x.Code == link).Result.Id;
+            var file = mapper.Map<FileDTO>( database.Files.Get(x => x.Link.Id == id).Result);
             if (file != null)
             {
                 var download = new FileDownloadModel()
                 {
-                    Array = System.IO.File.ReadAllBytes(file.Path.Link),
+                    Array =   System.IO.File.ReadAllBytesAsync((file.Path.Link)).Result ,
                     Name = file.Name,
-                    Type = file.Type.Format
+                    Type = "application/"+file.Type.Format
                 };
                 //todo :Ex
                 return download != null ? download : throw new Exception();
@@ -153,7 +154,7 @@ namespace BL.Services.CommonServices
         }
     }
 
-    public IEnumerable<FileDTO> GetFiles(int? user_id)
+    public IEnumerable<FileDTO> GetFiles(string user_id)
     {
         var list = mapper.Map<List<FileDTO>>(database.Files.Query(x => x.User.IdenityId == user_id).Result);
         if (list != null)
@@ -202,10 +203,10 @@ namespace BL.Services.CommonServices
 
         public string Upload(FileUploadModel file)
         {
-            file.UserId = 914;
+           
             var element = file.File;
             var format = element.ContentType;
-            var username = file.UserId + " Storage";
+            var username = file.UserId + "Storage";
             string directory_path= PathConfiguration.storage + @"\" + username;
             if (!Directory.Exists(directory_path))
             {

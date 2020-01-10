@@ -30,9 +30,18 @@ namespace API.Models
 
         [Required]
         [DataType(DataType.Text)]
-        [Display(Name ="FullName")]
+        [Display(Name = "Name")]
+        [StringLength(30, MinimumLength = 2, ErrorMessage = " Not corect size of Name ")]
+        public string Name { get; set; }
+
+
+
+
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name ="Surname")]
         [StringLength(30,MinimumLength =2, ErrorMessage =" Not corect size of Name ")]
-        public string FullName { get; set; }
+        public string Surname { get; set; }
 
 
 

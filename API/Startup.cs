@@ -44,9 +44,14 @@ namespace API
             services.AddIdentityCore<ApplicationUser>().
                 AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<IdentityContext>();
-            services.AddDbContext<IdentityContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
+            
+            //services.AddDbContext<IdentityContext>(options =>
+            //options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
+
             BL.Configuration.Injection.InfrastructureConfiguration.Configure(services);
+            BL.Configuration.Injection.InfrastructureConfiguration.
+                DbContext(services,Configuration.GetConnectionString("FilesDb"), Configuration.GetConnectionString("IdentityConnection"));
+
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IUserService, UserService>();
             //  services.AddTransient<IAdminService, AdminService>();

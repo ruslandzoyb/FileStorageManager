@@ -50,12 +50,14 @@ namespace DAL.Repository
 
         public async Task<File> Get(int? id)
         {
-            File file = await context.Files.Include(x => x.Link)
-                 .Include(x => x.Path)
-                 .Include(x => x.Status)
-                 .Include(x => x.Type)
-                 .Include(x => x.User)
+            File file = await context.Files
                 .Where(x => x.Id == id).FirstAsync();
+
+            //Include(x => x.Link)
+            //     .Include(x => x.Path)
+            //     .Include(x => x.Status)
+            //     .Include(x => x.Type)
+            //     .Include(x => x.User)
 
             return file;
 

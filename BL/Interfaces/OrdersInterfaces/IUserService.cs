@@ -12,10 +12,10 @@ namespace BL.Interfaces.OrdersInterfaces
     {
         IEnumerable<FileDTO> GetList();
         FileDTO GetFile(int? id,int user_id);
-        IEnumerable<FileDTO> GetFiles(int? user_id);
+        IEnumerable<FileDTO> GetFiles(string user_id);
         string Upload(FileUploadModel file);
 
-        bool Delete(int? id,int user_id);
+        bool Delete(int? id,string user_id);
         ChangeStatusView ChangeStatus(ChangeStatusModel model);// id,status;
 
         IEnumerable<FileDTO> Find(Expression<Func<File, bool>> predicate);
