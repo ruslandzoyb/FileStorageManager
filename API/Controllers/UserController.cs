@@ -11,11 +11,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using API.Models;
+using BL.ModelsDTO.OtherModels;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
-   // [Authorize(Roles = "User,Admin")]
+   [Authorize(Roles = "User,Admin")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -31,7 +32,7 @@ namespace API.Controllers
         }
       
         [HttpGet]
-        [Authorize(Roles ="Admin")]
+        [Route("GetFile")]
         public IActionResult GetFile(int? id)
         {
            int user_id = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -44,14 +45,14 @@ namespace API.Controllers
              
         [HttpGet]
         
-       //[Authorize(Roles ="User")]
-        [Route("Go")]
-        public IActionResult FileInfo()
+      
+        [Route("FileInfo")]
+        public IActionResult FileInfo([FromForm] int?id)
         {
-            var el = this.User.Identity.Name;
+            var user_id = this.User.Identity.Name;
 
-          // var info= service.InfoByFile(id, user_id);
-            return Ok(el);
+           var info= service.InfoByFile(id, user_id);
+            return Ok(info);
         }
 
         
@@ -68,26 +69,38 @@ namespace API.Controllers
 
        
         [HttpDelete]
-        public IActionResult Delete(int id)
+        [Route("Delete")]
+        public IActionResult Delete([FromForm]int? id)
+
         {
             var el = User.Identity.Name;
+           var res= service.Delete(id, el);
            // service.Delete(id,);
-            return Ok("Deleted");
+            return Ok(res);
         }
 
         [HttpGet]
         [Route("ByLink")]
-        public IActionResult GetByLink(string link)
+        public IActionResult GetByLink([FromQuery]string link)
         {
             var file = mapper.Map<FileModelView>(service.GetPath(link));
             return Ok(file);
         }
 
+        [HttpPost]
+        [Route("ChangeStatus")]
+        
+        public IActionResult ChangeStatus([FromBody]ChangeStatusModel model)
+        {
+           var view= service.ChangeStatus(model);
+
+            return Ok(view);
+        }
 
         [HttpGet]
-        //[Authorize]
+        
         [Route("Download")]
-        public FileResult Download([FromRoute] string link)
+        public FileResult Download([FromQuery] string link)
         {
             var download = mapper.Map<DownloadViewModel>(service.Download(link));
             if (download!=null)
@@ -101,7 +114,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        
         [Route("Upload")]
         public IActionResult Upload([FromForm] UploadFileViewModel model)
         {

@@ -62,7 +62,7 @@ namespace DAL.Repository
 
         public async Task<Status> Get(Expression<Func<Status, bool>> filter)
         {
-          return await context.Statuses.Where(filter).FirstAsync(); 
+          return await context.Statuses. Where(filter).FirstAsync(); 
         }
 
         public async Task<IEnumerable<Status>> GetList()

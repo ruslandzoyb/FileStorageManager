@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using BL.ModelsDTO.ApplicationModels;
 using BL.ModelsDTO.FileManageDTO;
 using DAL.Models.CommonModels;
+using DAL.Models.IdentityModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,7 +21,7 @@ namespace BL.Configuration.Mapper
             CreateMap<Link, LinkDTO>().ReverseMap();
             CreateMap<Status, StatusDTO>().ReverseMap();
             CreateMap<Path, PathDTO>().ReverseMap();
-            
+            CreateMap<ApplicationUser, ApplicationUserDTO>().ReverseMap();
 
         }
     }

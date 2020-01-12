@@ -14,6 +14,7 @@ using System.IO;
 using File = DAL.Models.CommonModels.File;
 using System.Xml;
 using BL.Configuration;
+using BL.Configuration.FileManaging;
 
 namespace BL.Services.CommonServices
 {
@@ -41,12 +42,16 @@ namespace BL.Services.CommonServices
                 if (file != null)
                 {
                     file.Status = database.Statuses.Get(x => x.Title == "Link").Result;
-                    file.Link.Code = r.Next(100000, 999999).ToString();
-                    change = new ChangeStatusView()
-                    {
-                        Name = new string(file.Name),
-                        Status = new string(file.Status.Title),
-                        Link = new string(file.Link.Code)
+                        file.Link =new Link()
+                        {
+                            Code= RandomService.Random()
+                    };
+                       // file.Link.Code = 
+                        change = new ChangeStatusView()
+                        {
+                            Name = new string(file.Name),
+                            Status = new string(file.Status.Title),
+                            Link = new string("http://localhost:50761/api/User/Download?link=" + file.Link.Code)
                     };
                     database.Save();
                     return change;
@@ -63,7 +68,7 @@ namespace BL.Services.CommonServices
                 if (file != null)
                 {
                     file.Status = database.Statuses.Get(x => x.Title == "Closed").Result;
-                    file.Link.Code = null;
+                        file.Link.Code = "";
                     change = new ChangeStatusView()
                     {
                         Name = new string(file.Name),
@@ -98,35 +103,67 @@ namespace BL.Services.CommonServices
     {
             var files = database.Files.Query(x => x.User.IdenityId == user_id).Result;
             var file = files.First(x => x.Id == id);
+            var path = file.Path.Link;
             database.Files.Delete(file);
              database.Save();
+            System.IO.File.Delete(path);
+
         return true;
         //todo :Delete !!!
     }
 
     public  FileDownloadModel Download(string link)
     {
-            var id =  database.Links.Get(x => x.Code == link).Result.Id;
-            var file = mapper.Map<FileDTO>( database.Files.Get(x => x.Link.Id == id).Result);
-            if (file != null)
+            try
             {
+                var id = database.Links.Get(x => x.Code == link).Result.Id;
+                var file = mapper.Map<FileDTO>(database.Files.Get(x => x.Link.Id == id).Result);
+                if (file != null)
+                {
+                    var download = new FileDownloadModel()
+                    {
+                        Array = System.IO.File.ReadAllBytesAsync((file.Path.Link)).Result,
+                        Name = file.Name,
+                        Type = "application/" + file.Type.Format
+                    };
+                    //todo :Ex
+                    return download != null ? download : throw new Exception();
+                }
+                else
+                {
+                    //todo :Ex
+                    throw new Exception();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            
+        }
+        public FileDownloadModel Download(int? id)
+        {
+            var file = database.Files.Get(id).Result;
+            if (file!=null)
+            {
+               
                 var download = new FileDownloadModel()
                 {
-                    Array =   System.IO.File.ReadAllBytesAsync((file.Path.Link)).Result ,
+                    Array = System.IO.File.ReadAllBytesAsync((file.Path.Link)).Result,
                     Name = file.Name,
-                    Type = "application/"+file.Type.Format
+                    Type = "application/" + file.Type.Format
                 };
                 //todo :Ex
                 return download != null ? download : throw new Exception();
             }
             else
             {
-                //todo :Ex
                 throw new Exception();
             }
         }
 
-    public IEnumerable<FileDTO> Find(Expression<Func<File, bool>> predicate)
+        public IEnumerable<FileDTO> Find(Expression<Func<File, bool>> predicate)
     {
         var list = mapper.Map<List<FileDTO>>(database.Files.Query(predicate).Result);
         if (list != null)
@@ -183,7 +220,7 @@ namespace BL.Services.CommonServices
 
     }
 
-    public string InfoByFile(int? id,int user_id)
+    public string InfoByFile(int? id,string user_id)
     {
         var file = mapper.Map<FileDTO>(database.Files.Get(id).Result);
         if (file != null)
@@ -201,38 +238,25 @@ namespace BL.Services.CommonServices
 
 
 
-        public string Upload(FileUploadModel file)
+        public bool Upload(FileUploadModel file)
         {
+
+            var path = FileSaver.GeneratePath(file);
+
            
-            var element = file.File;
-            var format = element.ContentType;
-            var username = file.UserId + "Storage";
-            string directory_path= PathConfiguration.storage + @"\" + username;
-            if (!Directory.Exists(directory_path))
-            {
-                directory_path = PathConfiguration.storage + @"\" + username;
-                Directory.CreateDirectory(directory_path);
-                  }
-
-            string path = directory_path +@"\"+ element.FileName;
-            if (element.Length > 0)
-            {
-                using (var fileStream = new FileStream(path, FileMode.Create))
-                {
-                    element.CopyTo(fileStream);
-                }
-
-            }
             var status = database.Statuses.Get(x => x.Title == "Closed").Result;
             var user = database.Users.Get(x => x.IdenityId == file.UserId).Result;
-            DAL.Models.CommonModels.Type type= new DAL.Models.CommonModels.Type();// database.Types.Get(x => x.Format == format).Result;
-            if (type==null)
+            
+
+
+            var type = new DAL.Models.CommonModels.Type()
             {
-                type = new DAL.Models.CommonModels.Type()
-                {
-                    Format = format
-                };
-            }
+                Format = path.Format
+            };
+
+            
+
+            
             var file_tosave = new File()
             {
                 Status = status,
@@ -242,7 +266,7 @@ namespace BL.Services.CommonServices
                 Type = type,
                 Path = new DAL.Models.CommonModels.Path()
                 {
-                    Link = path
+                    Link = path.Path
                 }
 
 
@@ -250,15 +274,18 @@ namespace BL.Services.CommonServices
             };
             database.Files.Create(file_tosave);
             database.Save();
-            throw new Exception();
+            return true;
         }
 
         public IEnumerable<FileDTO> GetList()
         {
-          var r=mapper.Map<List<FileDTO>>(database.Files.GetList().Result.ToList());
-            return r;
+          var files=mapper.Map<List<FileDTO>>(database.Files.GetList().Result.ToList());
+            return files;
         }
 
-        public static Random r = new Random();
+       
+
+      
 }
+    
 }

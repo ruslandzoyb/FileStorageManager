@@ -25,7 +25,8 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetPath([FromBody] string link)
+        [Route("GetPath")]
+        public IActionResult GetPath([FromQuery] string link)
         {
           var file= mapper.Map<FileModelView>(service.GetPath(link));
             return Ok(file);

@@ -9,7 +9,7 @@ namespace BL.Configuration.TokenServices
     {
 
         public const string ISSUER = "API"; // издатель токена
-        public const string AUDIENCE = "MyAuthClient"; // потребитель токена
+        public const string AUDIENCE = "Postman"; // потребитель токена
         const string KEY = "most!secretkeyevercreat2ed";   // ключ для шифрации
         public const int LIFETIME = 25; // время жизни токена - 1 минута
         public static SymmetricSecurityKey GetSymmetricSecurityKey()

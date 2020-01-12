@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Configuration;
+using Type = DAL.Models.CommonModels.Type;
+
 namespace DAL.Context
 {
     public class ApplicationContext : DbContext
@@ -110,6 +112,7 @@ namespace DAL.Context
 
 
             modelBuilder.Entity<Status>().HasIndex(x => x.Title).IsUnique();
+            modelBuilder.Entity<Type>().HasIndex(x => x.Format).IsUnique();
         }
 
 

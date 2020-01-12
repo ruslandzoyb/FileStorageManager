@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Models.CommonModels;
+using AutoMapper;
 using BL.Interfaces.OrdersInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -15,18 +17,115 @@ namespace API.Controllers
     public class AdminController : ControllerBase
     {
         IAdminService adminService;
-
+        IMapper mapper;
         public AdminController(IAdminService adminService)
         {
             this.adminService = adminService;
+            mapper = new MapperConfiguration(ctr => ctr.AddProfile(new API.Mapper.MapperSetAPI())).CreateMapper();
         }
 
         [HttpDelete]
-        public IActionResult Delete(int? id)
+        [Route("Delete")]
+        public IActionResult Delete([FromForm]string id)
         {
             adminService.DeleteUser(id);
             return Ok();
         }
+
+        [HttpGet]
+        [Route("Files")]
+
+        public IActionResult GetFiles()
+        {
+           var files=  mapper.Map<List<FileModelView>>(adminService.GetFiles());
+            if (files!=null)
+            {
+                return Ok(files);
+            }
+            else
+            {
+                return NotFound("Users wast found");
+            }
+            
+        }
+
+
+        [HttpGet]
+        [Route("Statuses")]
+        public IActionResult GetStatuses()
+        {
+           var statuses=  mapper.Map<List<StatusViewModel>>(adminService.GetStatuses());
+            if (statuses!=null)
+            {
+                return Ok(statuses);
+            }
+            else
+            {
+                return NotFound("Statuses wasnt found");
+            }
+            
+        }
+
+        [HttpGet]
+        [Route("Types")]
+
+        public IActionResult GetTypes()
+        {
+            var types = mapper.Map<List<TypeVievModel>>(adminService.GetTypes());
+            if (types!=null)
+            {
+                return Ok(types);
+            }
+            else
+            {
+                return NotFound();
+            }
+            
+        }
+
+        [HttpGet]
+        [Route("User")]
+        public IActionResult GetUser([FromForm] string id)
+        {
+            var user = mapper.Map<UserViewModel>( adminService.GetUser(id));
+            return Ok(user);
+        }
+
+        [HttpGet]
+        [Route("UserInfo")]
+
+        public IActionResult GetUserInfo([FromForm] string id)
+        {
+            var info = adminService.GetUserInfo(id);
+            if (info!=null)
+            {
+                return Ok(info);
+            }
+            return NotFound();
+        }
         
+        [HttpGet]
+        [Route("IdentityUsers")]
+        public  async Task<IActionResult> GetIdenities()
+        {
+           var users= await adminService.GetIdentityUsers();
+            return  Ok(users);
+        }
+
+        [HttpGet]
+        [Route("Users")]
+        public IActionResult GetUsers()
+        {
+            var users = mapper.Map<List<UserViewModel>>( adminService.GetUsers());
+            if (users!=null)
+            {
+                return Ok(users);
+            }
+            else
+            {
+                return NotFound();
+            }  
+            
+        }
     }
 }

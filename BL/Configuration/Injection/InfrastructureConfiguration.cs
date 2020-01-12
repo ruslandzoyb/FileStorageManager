@@ -19,7 +19,7 @@ namespace BL.Configuration.Injection
             
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<UserManager<ApplicationUser>>();
-            services.AddTransient<IdentityContext>();
+           // services.AddTransient<IdentityContext>();
             
             
         }

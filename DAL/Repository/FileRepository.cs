@@ -50,7 +50,7 @@ namespace DAL.Repository
 
         public async Task<File> Get(int? id)
         {
-            File file = await context.Files
+            File file = await context.Files.Include(x=>x.Link)
                 .Where(x => x.Id == id).FirstAsync();
 
             //Include(x => x.Link)
@@ -68,6 +68,7 @@ namespace DAL.Repository
             return await context.Files.Include(x => x.Path)
                 .Include(x => x.Status)
                 .Include(x => x.Type)
+                .Include(x=>x.Link)
                 .Where(filter)
                 .FirstAsync();
         }

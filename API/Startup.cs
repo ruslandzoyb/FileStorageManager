@@ -21,6 +21,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace API
 {
@@ -37,8 +39,45 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
 
+            
+            
             services.AddControllers();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api", Version = "v1" });
+                OpenApiSecurityScheme securityDefinition = new OpenApiSecurityScheme()
+                {
+                    Name = "Bearer",
+                    BearerFormat = "JWT",
+                    Scheme = "bearer",
+                    Description = "Specify the authorization token.",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                };
+                c.AddSecurityDefinition("jwt_auth", securityDefinition);
 
+                // Make sure swagger UI requires a Bearer token specified
+                OpenApiSecurityScheme securityScheme = new OpenApiSecurityScheme()
+                {
+                    Reference = new OpenApiReference()
+                    {
+                        Id = "jwt_auth",
+                        Type = ReferenceType.SecurityScheme
+                    }
+                };
+                OpenApiSecurityRequirement securityRequirements = new OpenApiSecurityRequirement()
+{
+    {securityScheme, new string[] { }},
+};
+                c.AddSecurityRequirement(securityRequirements);
+                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+
+            });
+            //services.AddSwaggerGen(c =>
+            //{
+            //    c.SwaggerDoc("v1", new Info { Title = "Values Api", Version = "v1" });
+            //});
+            services.AddHttpContextAccessor();
 
 
             services.AddIdentityCore<ApplicationUser>().
@@ -54,8 +93,9 @@ namespace API
 
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IUserService, UserService>();
-            //  services.AddTransient<IAdminService, AdminService>();
-
+              services.AddTransient<IAdminService, AdminService>();
+            services.AddTransient<IRoleService, RoleService>();
+            services.AddTransient<ILinkService, LinkService>();
 
             services.AddAuthentication(x => {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -78,10 +118,12 @@ namespace API
                         IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
                         ValidateIssuerSigningKey = true,
                     };
+            
             });
+           
 
-         //   services.AddSingleton<UserManager<ApplicationUser>>();
-           // services.AddTransient<IAccountService, AccountService>();
+            //   services.AddSingleton<UserManager<ApplicationUser>>();
+            // services.AddTransient<IAccountService, AccountService>();
 
 
 
@@ -107,17 +149,29 @@ namespace API
             {
                 app.UseDeveloperExceptionPage();
             }
+           
+            
 
-          
             app.UseRouting();
             // app.UseAuthentication();
             app.UseAuthentication();
             app.UseAuthorization();
-            
+
+            app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod());
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Main API v1");
+                
+            });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+           
         }
     }
 }

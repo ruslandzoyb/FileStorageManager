@@ -27,8 +27,8 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        
-        public IActionResult AddRole([FromBody] string role)
+        [Route("AddRole")]
+        public IActionResult AddRole([FromQuery] string role)
         {
             service.AddRole(role);
             return Ok();
@@ -36,7 +36,7 @@ namespace API.Controllers
 
 
         [HttpDelete]
-        public IActionResult Delete([FromBody] string role)
+        public IActionResult Delete([FromForm] string role)
         {
             service.Delete(role);
             return Ok();
@@ -49,7 +49,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetRoles([FromBody] string role)
+        public IActionResult GetRoles([FromForm] string role)
         {
           return Ok(mapper.Map<ApplicationUserView>(service.GetUsersByRole(role)));
         }

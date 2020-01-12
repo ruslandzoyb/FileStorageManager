@@ -15,6 +15,7 @@ using BL.Interfaces.OrdersInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using DAL.UOW;
 
+
 namespace API.Controllers
 {
     [Route("api/[controller]")]
@@ -23,7 +24,7 @@ namespace API.Controllers
     {
         private IAccountService service;
         private IMapper mapper;
-        private UnitOfWork unit;
+       
         public AccountController(IAccountService service)
         {
             this.service = service;
@@ -36,14 +37,14 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("Register")]
-        public IActionResult Register ([FromForm] ApplicationUserView model)
+        public  IActionResult Register ([FromBody] ApplicationUserView model)
         {
 
 
             if (ModelState.IsValid)
             {
                 var user = mapper.Map<BL.ModelsDTO.ApplicationModels.ApplicationUserDTO>(model);
-                user.Roles.Add("User");
+                user.Roles.Add("Admin");
                 var result = service.CreateUser(user);
                 if (result)
                 {
@@ -66,12 +67,13 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("Login")]
-        public IActionResult Login([FromForm] LoginModelView model)
+        public IActionResult Login([FromQuery] LoginModelView model)
         {
             if (ModelState.IsValid)
             {
                 var login = mapper.Map<BL.ModelsDTO.ApplicationModels.LoginModelDTO>(model);
                 var message = service.Login(login);
+                
                 return Ok(message);
                 
             }
@@ -81,20 +83,17 @@ namespace API.Controllers
             }
         }
 
-        //[HttpGet]
-        //[Route("Hi")]
-        //public string Get()
-        //{
-        //    return "Hello bitch";
-        //}
+      
 
 
-        [HttpDelete]
-        [Route("Delete")]
+        [HttpGet]
         [Authorize]
-        public IActionResult Delete([FromBody] DeleteAccModelView model)
+        [Route("Delete")]
+        
+        public IActionResult Delete([FromForm] DeleteAccModelView model)
         {
             var delete = mapper.Map<BL.ModelsDTO.OtherModels.DeleteAccModel>(model);
+            delete.Id = User.Identity.Name;
             var message = service.DeleteAccount(delete);
             if (message!=null)
             {

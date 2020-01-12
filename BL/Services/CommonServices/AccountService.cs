@@ -48,13 +48,14 @@ namespace BL.Services.CommonServices
                 Email = user.Email,
                 Surname = user.Surname,
                 UserName=user.Name
+                
                                 
 
 
             };
             var role = rolesManger.CreateAsync(new IdentityRole()
             {
-                Name = "User"
+                Name = "Admin"
 
             }).Result;
 
@@ -97,15 +98,18 @@ namespace BL.Services.CommonServices
         {
             if (model != null)
             {
-                var user = userManager.FindByIdAsync(model.Id.ToString()).Result;
+                var user = userManager.FindByIdAsync(model.Id).Result;
+                
                 if (user!=null&&userManager.CheckPasswordAsync(user,model.Password).Result)
                 {
                     var name = user.UserName;
                     var surname = user.Surname;
                     var delete = userManager.DeleteAsync(user).Result;
+                    
                     if (delete.Succeeded)
                     {
-                        database.Users.Delete(model.Id);
+                        var obj = database.Users.Get(x=>x.IdenityId==model.Id).Result;
+                        database.Users.Delete(obj);
                         database.Save();
                         return new string($"User {name} {surname} account was deleted cause of {model.Reason} ");
                     }

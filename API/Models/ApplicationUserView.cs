@@ -8,22 +8,22 @@ namespace API.Models
 {
     public class ApplicationUserView
     {
-       // public int Id { get; set; }
+        // public int Id { get; set; }
 
 
 
         [Required]
         [EmailAddress]
-        [Display(Name ="Email")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
 
 
 
         [Required]
-        
-        [StringLength(15,MinimumLength =8,ErrorMessage ="Password is not of corect size")]
+
+        [StringLength(15, MinimumLength = 8, ErrorMessage = "Password is not of corect size")]
         [DataType(DataType.Password)]
-        [Display(Name ="Password")]
+        [Display(Name = "Password")]
         public string Password { get; set; }
 
 
@@ -39,8 +39,8 @@ namespace API.Models
 
         [Required]
         [DataType(DataType.Text)]
-        [Display(Name ="Surname")]
-        [StringLength(30,MinimumLength =2, ErrorMessage =" Not corect size of Name ")]
+        [Display(Name = "Surname")]
+        [StringLength(30, MinimumLength = 2, ErrorMessage = " Not corect size of Name ")]
         public string Surname { get; set; }
 
 
