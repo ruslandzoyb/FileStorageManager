@@ -123,7 +123,7 @@ namespace BL.Services.CommonServices
                     var download = new FileDownloadModel()
                     {
                         Array = System.IO.File.ReadAllBytesAsync((file.Path.Link)).Result,
-                        Name = file.Name,
+                        Name = file.Name + file.Type.Format,
                         Type = "application/" + file.Type.Format
                     };
                     //todo :Ex
@@ -151,7 +151,7 @@ namespace BL.Services.CommonServices
                 var download = new FileDownloadModel()
                 {
                     Array = System.IO.File.ReadAllBytesAsync((file.Path.Link)).Result,
-                    Name = file.Name,
+                    Name = file.Name+file.Type.Format,
                     Type = "application/" + file.Type.Format
                 };
                 //todo :Ex
@@ -178,9 +178,9 @@ namespace BL.Services.CommonServices
 
     
 
-    public FileDTO GetFile(int? id,int user_id)
+    public FileDTO GetFile(int? id,string user_id)
     {
-        var file = mapper.Map<FileDTO>(database.Users.Get(user_id).Result.Files.Where(x=>x.Id==id));
+        var file = mapper.Map<FileDTO>(database.Users.Get(x=>x.IdenityId==user_id).Result.Files.Where(x=>x.Id==id));
         if (file != null)
         {
             return file;
@@ -207,16 +207,22 @@ namespace BL.Services.CommonServices
 
     public FileDTO GetPath(string link)
     {
-        var l = (database.Links.Get(x => x.Code == link).Result.Id);
-            var el = mapper.Map<FileDTO>( database.Files.Get(x => x.Link.Id == l).Result);
-        if (el != null)
-        {
-            return el;
-        }
-        else
-        {
+        var l = (database.Links.Get(x => x.Code == link).Result);
+            if (l!=null)
+            {
+                int i = l.Id;
+                var el = mapper.Map<FileDTO>(database.Files.Get(x => x.Link.Id == i).Result);
+                if (el != null)
+                {
+                    return el;
+                }
+                else
+                {
+                    throw new Exception();
+                }
+            }
             throw new Exception();
-        }
+           
 
     }
 

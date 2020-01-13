@@ -49,7 +49,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetRoles([FromForm] string role)
+        public IActionResult GetRoles([FromQuery] string role)
         {
           return Ok(mapper.Map<ApplicationUserView>(service.GetUsersByRole(role)));
         }

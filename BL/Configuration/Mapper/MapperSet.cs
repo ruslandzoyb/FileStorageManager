@@ -6,6 +6,7 @@ using DAL.Models.IdentityModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Type = DAL.Models.CommonModels.Type;
 
 namespace BL.Configuration.Mapper
@@ -22,6 +23,7 @@ namespace BL.Configuration.Mapper
             CreateMap<Status, StatusDTO>().ReverseMap();
             CreateMap<Path, PathDTO>().ReverseMap();
             CreateMap<ApplicationUser, ApplicationUserDTO>().ReverseMap();
+            CreateMap(typeof(Task<>), typeof(Task<>));
 
         }
     }

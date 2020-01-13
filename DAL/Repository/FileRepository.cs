@@ -55,7 +55,8 @@ namespace DAL.Repository
                  .Include(x => x.Status)
                  .Include(x => x.Type)
                  .Include(x => x.User)
-                .Where(x => x.Id == id).FirstAsync();
+                 
+                .Where(x => x.Id == id).SingleOrDefaultAsync();
 
             
 
@@ -69,8 +70,9 @@ namespace DAL.Repository
                 .Include(x => x.Status)
                 .Include(x => x.Type)
                 .Include(x=>x.Link)
+                .Include(x=>x.Type)
                 .Where(filter)
-                .FirstAsync();
+                .SingleOrDefaultAsync();
         }
 
         public async Task<IEnumerable<File>> GetList()

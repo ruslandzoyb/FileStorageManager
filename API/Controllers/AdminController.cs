@@ -26,7 +26,7 @@ namespace API.Controllers
 
         [HttpDelete]
         [Route("Delete")]
-        public IActionResult Delete([FromForm]string id)
+        public IActionResult Delete([FromQuery]string id)
         {
             adminService.DeleteUser(id);
             return Ok();
@@ -85,7 +85,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("User")]
-        public IActionResult GetUser([FromForm] string id)
+        public IActionResult GetUser([FromQuery] string id)
         {
             var user = mapper.Map<UserViewModel>( adminService.GetUser(id));
             return Ok(user);
@@ -94,7 +94,7 @@ namespace API.Controllers
         [HttpGet]
         [Route("UserInfo")]
 
-        public IActionResult GetUserInfo([FromForm] string id)
+        public IActionResult GetUserInfo([FromQuery] string id)
         {
             var info = adminService.GetUserInfo(id);
             if (info!=null)
@@ -114,17 +114,10 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("Users")]
-        public IActionResult GetUsers()
+        public  async Task<IActionResult> GetUsers()
         {
-            var users = mapper.Map<List<UserViewModel>>( adminService.GetUsers());
-            if (users!=null)
-            {
-                return Ok(users);
-            }
-            else
-            {
-                return NotFound();
-            }  
+            var users = await mapper.Map<Task<List<UserViewModel>>>( adminService.GetUsers());
+            return Ok(users);
             
         }
     }

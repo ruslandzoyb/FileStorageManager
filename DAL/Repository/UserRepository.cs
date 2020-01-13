@@ -48,14 +48,14 @@ namespace DAL.Repository
            return await context.Users.Include(x => x.Files).ThenInclude(y => y.Link)
                  .Include(x => x.Files).ThenInclude(y => y.Path)
                  .Include(x => x.Files).ThenInclude(y => y.Type)
-                 .Include(x => x.Files).ThenInclude(y => y.Status).FirstAsync();
+                 .Include(x => x.Files).ThenInclude(y => y.Status).SingleOrDefaultAsync();
            
 
         }
 
         public async Task<User> Get(Expression<Func<User, bool>> filter)
         {
-           return await context.Users.Where(filter).FirstAsync();
+           return await context.Users.Where(filter).SingleOrDefaultAsync();
         }
 
         public async Task<IEnumerable<User>> GetList()

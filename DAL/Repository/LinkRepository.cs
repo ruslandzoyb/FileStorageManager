@@ -54,7 +54,7 @@ namespace DAL.Repository
 
         public Task<Link> Get(Expression<Func<Link, bool>> filter)
         {
-           return context.Links .Include(x=>x.File).Where(filter).FirstAsync();
+           return context.Links .Include(x=>x.File).Where(filter).SingleOrDefaultAsync();
             
         }
 

@@ -35,9 +35,9 @@ namespace API.Controllers
         [Route("GetFile")]
         public IActionResult GetFile(int? id)
         {
-           int user_id = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            string user_id = User.Identity.Name;
           var file= mapper.Map<FileModelView>(service.GetFile(id, user_id));
-            //var file = mapper.Map < File >
+           
             return Ok(file);
         }
 
@@ -61,9 +61,9 @@ namespace API.Controllers
      // [Authorize(Roles ="User")]
         public IActionResult GetFiles()
         {
-           // int user_id = Convert.ToInt32(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            var files = mapper.Map<List<FileModelView>>(service.GetList().ToList());
+            
+            string user_id = User.Identity.Name;
+            var files = mapper.Map<List<FileModelView>>(service.GetFiles(user_id).ToList());
             return Ok(files);
         }
 

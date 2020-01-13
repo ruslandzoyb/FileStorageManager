@@ -82,18 +82,14 @@ namespace BL.Services.CommonServices
             }
         }
 
-        public IEnumerable<FileDTO> GetFiles()
+        public  IEnumerable<FileDTO> GetFiles()
         {
-            var fk = mapper.Map<Task<FileDTO>>(database.Files.GetList());
-            var files = mapper.Map<List<FileDTO>>(database.Files.GetList().Result
-                                    .OrderBy(x => x.Name)
-                                    .ThenBy(x => x.Creation));
+            var files =  mapper.Map<Task<List<FileDTO>>>(database.Files.GetList()).Result;
 
-            if (files != null)
+            if (files!=null)
             {
                 return files;
             }
-            //todo :ex
             throw new Exception();
         }
 

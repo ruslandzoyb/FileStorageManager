@@ -18,6 +18,8 @@ using System.Collections.Generic;
 using System.Text;
 using BL.ModelsDTO.OtherModels;
 using System.Threading.Tasks;
+using System.Linq;
+using BL.Configuration.FileManaging;
 
 namespace BL.Services.CommonServices
 {
@@ -56,23 +58,27 @@ namespace BL.Services.CommonServices
 
 
             };
-            var role = rolesManger.CreateAsync(new IdentityRole()
-            {
-                Name = "User"
-
-            }).Result;
+            var role = user.Roles;
+           
 
             var create = userManager.CreateAsync(us, user.Password).Result;
             if (create.Succeeded)
             {
-                var roles = userManager.AddToRolesAsync(us, user.Roles).Result;
+                var roles = userManager.AddToRolesAsync(us, role).Result;
                 if (create.Succeeded && roles.Succeeded)
                 {
-
+                    
                     database.Users.Create(mapper.Map<User>(new UserDTO()
                     {
                         IdenityId = userManager.GetUserIdAsync(us).Result
+                        
                     }));
+                    string path = userManager.GetUserIdAsync(us).Result;
+                    FileSaver.CreateFolder(path);
+
+
+
+
                     database.Save();
                     return true;
 

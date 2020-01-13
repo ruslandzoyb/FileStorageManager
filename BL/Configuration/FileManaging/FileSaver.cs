@@ -46,7 +46,14 @@ namespace BL.Configuration.FileManaging
             
         }
 
-
+        static public void CreateFolder(string user)
+        {
+            var path=PathConfiguration.storage+"/"+user;
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path+"Storage");
+            }
+        }
         private static void Save(IFormFile file,string path)
         {
             if (file.Length > 0)

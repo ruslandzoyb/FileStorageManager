@@ -28,7 +28,7 @@ namespace DAL.Repository
             
         }
 
-        public async void Delete(int ? id)
+        public  void Delete(int ? id)
         {
             var path = Get(id).Result;
             if (path != null)
@@ -53,7 +53,7 @@ namespace DAL.Repository
 
         public async Task<Status> Get(Expression<Func<Status, bool>> filter)
         {
-          return await context.Statuses. Where(filter).FirstAsync(); 
+          return await context.Statuses. Where(filter).SingleOrDefaultAsync(); 
         }
 
         public async Task<IEnumerable<Status>> GetList()

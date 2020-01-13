@@ -95,7 +95,7 @@ namespace API.Controllers
         [Authorize]
         [Route("Delete")]
         
-        public IActionResult Delete([FromForm] DeleteAccModelView model)
+        public IActionResult Delete([FromQuery] DeleteAccModelView model)
         {
             var delete = mapper.Map<BL.ModelsDTO.OtherModels.DeleteAccModel>(model);
             delete.Id = User.Identity.Name;

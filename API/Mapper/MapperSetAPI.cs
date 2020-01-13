@@ -15,6 +15,9 @@ namespace API.Mapper
             CreateMap<ApplicationUserView, BL.ModelsDTO.ApplicationModels
                 .ApplicationUserDTO>().ReverseMap();
 
+
+           
+
             CreateMap<LoginModelView, BL.ModelsDTO.ApplicationModels.LoginModelDTO>().ReverseMap();
 
             CreateMap<DeleteAccModelView, BL.ModelsDTO.OtherModels.DeleteAccModel>().ReverseMap();

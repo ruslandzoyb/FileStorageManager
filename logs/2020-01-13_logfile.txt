@@ -5,3 +5,13 @@
 2020-01-13 14:02:31.6991 INFO User was created
 2020-01-13 14:13:44.0818 INFO Someone is trying to register in role User
 2020-01-13 14:13:44.8487 INFO User was created
+2020-01-13 17:47:56.8533 INFO Someone is trying to register in role User
+2020-01-13 17:47:57.8625 INFO User was created
+2020-01-13 18:59:16.1377 INFO Someone is trying to register in role User
+2020-01-13 18:59:16.8526 INFO User was created
+2020-01-13 19:47:44.2931 INFO Someone is trying to register in role User
+2020-01-13 19:47:45.3640 INFO User was created
+2020-01-13 19:49:33.8920 INFO Someone is trying to register in role User
+2020-01-13 19:49:34.5586 INFO User was created
+2020-01-13 19:51:37.4793 INFO Someone is trying to register in role User
+2020-01-13 19:51:38.1575 INFO User was created

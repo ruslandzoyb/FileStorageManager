@@ -56,7 +56,7 @@ namespace DAL.Repository
 
         public async Task<Path> Get(Expression<Func<Path, bool>> filter)
         {
-            return await context.Paths.Where(filter).FirstAsync();
+            return await context.Paths.Where(filter).SingleOrDefaultAsync();
         }
 
         public async Task<IEnumerable<Path>> GetList()
