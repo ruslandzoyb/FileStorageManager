@@ -17,7 +17,12 @@ namespace API
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+            Host.CreateDefaultBuilder(args).ConfigureLogging(logBuilder =>
+            {
+                logBuilder.ClearProviders(); // removes all providers from LoggerFactory
+                logBuilder.AddConsole();
+                
+            })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

@@ -31,33 +31,33 @@ namespace DAL.Repository
 
         public void Delete(File item)
         {
+            if (item!=null)
+            {
+                context.Files.Remove(item);
+            }
             
-            context.Files.Remove(item);
         }
         public void Delete(int? id)
         {
-            var file = Get(id).Result;
+            var file =  Get(id).Result;
             if (file != null)
             {
                 context.Files.Remove(file);
             }
-            else
-            {
-                //todo :
-            }
+           
         }
 
 
         public async Task<File> Get(int? id)
         {
-            File file = await context.Files.Include(x=>x.Link)
+            File file = await context.Files.Include(x=>x.Link).Include(x => x.Link)
+                 .Include(x => x.Path)
+                 .Include(x => x.Status)
+                 .Include(x => x.Type)
+                 .Include(x => x.User)
                 .Where(x => x.Id == id).FirstAsync();
 
-            //Include(x => x.Link)
-            //     .Include(x => x.Path)
-            //     .Include(x => x.Status)
-            //     .Include(x => x.Type)
-            //     .Include(x => x.User)
+            
 
             return file;
 

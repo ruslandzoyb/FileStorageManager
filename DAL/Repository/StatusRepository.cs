@@ -25,18 +25,17 @@ namespace DAL.Repository
             {
                 await context.Statuses.AddAsync(item);
             }
-            //todo exeption
-            throw new NotImplementedException();
+            
         }
 
         public async void Delete(int ? id)
         {
-            var path = await context.Statuses.FindAsync(id);
+            var path = Get(id).Result;
             if (path != null)
             {
                 context.Statuses.Remove(path);
             }
-            //todo :ex
+            
 
         }
 
@@ -48,16 +47,8 @@ namespace DAL.Repository
 
         public async Task<Status> Get(int? id)
         {
-            var path = await context.Statuses.FindAsync(id);
-            if (path != null)
-            {
-                return path;
-            }
-            else
-            {
-                //todo :ex
-                throw new Exception();
-            }
+            return await context.Statuses.FindAsync(id);
+            
         }
 
         public async Task<Status> Get(Expression<Func<Status, bool>> filter)
@@ -67,30 +58,14 @@ namespace DAL.Repository
 
         public async Task<IEnumerable<Status>> GetList()
         {
-            var list = await context.Statuses.ToListAsync();
-            if (list != null)
-            {
-                return list;
-            }
-            else
-            {
-                //todo :ex
-                throw new Exception();
-            }
+            return await context.Statuses.ToListAsync();
+            
         }
 
         public async Task<IEnumerable<Status>> Query(Expression<Func<Status, bool>> filter)
         {
-            var list = await context.Statuses.Where(filter).ToListAsync();
-            if (list != null)
-            {
-                return list;
-            }
-            else
-            {
-                //todo:ex
-                throw new Exception();
-            }
+            return await context.Statuses.Where(filter).ToListAsync();
+           
         }
 
         public void Update(Status item)

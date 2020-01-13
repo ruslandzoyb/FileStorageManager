@@ -25,70 +25,50 @@ namespace DAL.Repository
             {
                 await context.Paths.AddAsync(item);
             }
-            //todo exeption
-            //throw new NotImplementedException();
+           
         }
 
         public  void Delete(Path path)
         {
-            
-            
-                 context.Paths.Remove(path);
-            
-            //todo :ex
+            if (path !=null )
+            {
+                context.Paths.Remove(path);
+            }
+
+                                   
 
         }
 
         public void Delete(int? id)
         {
-            throw new NotImplementedException();
+            var path = Get(id).Result;
+            if (path!=null)
+            {
+                Delete(path);
+            }
         }
 
         public async Task<Path> Get(int? id)
         {
-            var path = await context.Paths.FindAsync(id);
-            if (path != null)
-            {
-                return path;
-            }
-            else
-            {
-                //todo :ex
-                throw new Exception();
-            }
+            return await context.Paths.FindAsync(id);
+           
         }
 
-        public Task<Path> Get(Expression<Func<Path, bool>> filter)
+        public async Task<Path> Get(Expression<Func<Path, bool>> filter)
         {
-            throw new NotImplementedException();
+            return await context.Paths.Where(filter).FirstAsync();
         }
 
         public async Task<IEnumerable<Path>> GetList()
         {
-            var list = await context.Paths.Include(x=>x.File).ToListAsync();
-            if (list != null)
-            {
-                return list;
-            }
-            else
-            {
-                //todo :ex
-                throw new Exception();
-            }
+            return await context.Paths.Include(x=>x.File).ToListAsync();
+            
         }
 
         public async Task<IEnumerable<Path>> Query(Expression<Func<Path, bool>> filter)
         {
-            var list = await context.Paths.Where(filter).ToListAsync();
-            if (list != null)
-            {
-                return list;
-            }
-            else
-            {
-                //todo:ex
-                throw new Exception();
-            }
+            return await context.Paths.Where(filter).ToListAsync();
+            
         }
 
         public void Update(Path item)

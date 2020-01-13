@@ -46,60 +46,29 @@ namespace DAL.Repository
         }
         public async Task<Link> Get(int? id)
         {
-            var link = await context.Links.FindAsync(id);
-            if (link != null)
-            {
-                return link;
-            }
-            else
-            {
-                //todo : make user exeption
-                throw new Exception();
-            }
+            return await context.Links.FindAsync(id);
+            
+          
 
         }
 
         public Task<Link> Get(Expression<Func<Link, bool>> filter)
         {
-            var link = context.Links .Include(x=>x.File).Where(filter).FirstAsync();
-            if (link != null)
-            {
-                return link;
-            }
-            else
-            {
-                //todo
-                throw new Exception();
-            }
+           return context.Links .Include(x=>x.File).Where(filter).FirstAsync();
+            
         }
 
         public async Task<IEnumerable<Link>> GetList()
         {
-            var list = await context.Links.ToListAsync();
-            if (list != null)
-            {
-                return list;
-            }
-            else
-            {
-                //todo exeption 
-                throw new Exception();
-            }
+            return await context.Links.ToListAsync();
+            
 
         }
 
         public async Task<IEnumerable<Link>> Query(Expression<Func<Link, bool>> filter)
         {
-            var list = await context.Links.Where(filter).ToListAsync();
-            if (list != null)
-            {
-                return list;
-            }
-            else
-            {
-                //todo exeption
-                throw new Exception();
-            }
+            return await context.Links.Where(filter).ToListAsync();
+            
         }
 
         public void Update(Link item)

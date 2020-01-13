@@ -30,14 +30,18 @@ namespace DAL.Repository
 
         public  void Delete(Type type)
         {
-           // var type = await context.Types.FindAsync(id);
+           
             context.Types.Remove(type);
 
         }
 
         public void Delete(int? id)
         {
-            throw new NotImplementedException();
+            var type = Get(id).Result;
+            if (type!=null)
+            {
+                Delete(type);
+            }
         }
 
         public async Task<Type> Get(int? id)

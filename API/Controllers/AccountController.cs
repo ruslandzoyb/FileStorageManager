@@ -14,7 +14,8 @@ using Microsoft.AspNetCore.Http;
 using BL.Interfaces.OrdersInterfaces;
 using Microsoft.AspNetCore.Authorization;
 using DAL.UOW;
-
+using Microsoft.Extensions.Logging;
+using LoggerSevice.Interface;
 
 namespace API.Controllers
 {
@@ -24,10 +25,12 @@ namespace API.Controllers
     {
         private IAccountService service;
         private IMapper mapper;
-       
-        public AccountController(IAccountService service)
+        private readonly ILoggerManager logger;
+
+        public AccountController(IAccountService service, ILoggerManager logger)
         {
             this.service = service;
+            this.logger = logger;
             mapper = new MapperConfiguration(ctr => ctr.AddProfile(new API.Mapper.MapperSetAPI())).CreateMapper();
             //file = new DAL.Repository.FileRepository(new DAL.Context.ApplicationContext());
             
@@ -39,27 +42,29 @@ namespace API.Controllers
         [Route("Register")]
         public  IActionResult Register ([FromBody] ApplicationUserView model)
         {
-
+            logger.LogInfo("Someone is trying to register in role User");
+            
 
             if (ModelState.IsValid)
             {
                 var user = mapper.Map<BL.ModelsDTO.ApplicationModels.ApplicationUserDTO>(model);
-                user.Roles.Add("Admin");
+                user.Roles.Add("User");
                 var result = service.CreateUser(user);
                 if (result)
                 {
+                    logger.LogInfo("User was created");
                     return Ok(user);
                 }
                 else
                 {
-                    //todo:Ex
+                    logger.LogError("Something went wrong with registration");
                     return Content("User wasn't created ");
                 }
                 //service.CreateUser()
             }
             else
             {
-                //todo:Ex
+                 logger.LogError("Model is not valid");
                 return NoContent();
             }
 
@@ -104,14 +109,15 @@ namespace API.Controllers
                 return NotFound();
             }
         }
-          
-       [HttpGet]
-       [Route("Get")]
-       public IActionResult Post()
+          [HttpGet]
+          [Authorize]
+          [Route("LogOut")]
+          public IActionResult LogOut()
         {
-            var file = "";
-            return Ok(file);
+             
+            return Ok();
         }
+       
     }
    public class MyClass
     {

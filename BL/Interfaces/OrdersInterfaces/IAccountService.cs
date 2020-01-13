@@ -14,6 +14,7 @@ namespace BL.Interfaces.OrdersInterfaces
         
 
         string DeleteAccount(DeleteAccModel model);
+      
 
     }
 }

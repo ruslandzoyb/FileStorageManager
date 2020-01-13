@@ -84,6 +84,7 @@ namespace BL.Services.CommonServices
 
         public IEnumerable<FileDTO> GetFiles()
         {
+            var fk = mapper.Map<Task<FileDTO>>(database.Files.GetList());
             var files = mapper.Map<List<FileDTO>>(database.Files.GetList().Result
                                     .OrderBy(x => x.Name)
                                     .ThenBy(x => x.Creation));

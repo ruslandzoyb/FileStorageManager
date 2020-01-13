@@ -1,0 +1,7 @@
+2020-01-13 14:02:30.7501 INFO Here is info message from the controller.
+2020-01-13 14:02:30.8461 DEBUG Here is debug message from the controller.
+2020-01-13 14:02:30.8461 WARN Here is warn message from the controller.
+2020-01-13 14:02:30.8461 ERROR Here is error message from the controller.
+2020-01-13 14:02:31.6991 INFO User was created
+2020-01-13 14:13:44.0818 INFO Someone is trying to register in role User
+2020-01-13 14:13:44.8487 INFO User was created

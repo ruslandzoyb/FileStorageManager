@@ -19,9 +19,10 @@ namespace BL.Configuration.Injection
             
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<UserManager<ApplicationUser>>();
-           // services.AddTransient<IdentityContext>();
-            
-            
+            services.AddTransient<SignInManager<ApplicationUser>>();
+            // services.AddTransient<IdentityContext>();
+
+
         }
         public static void DbContext(IServiceCollection services,string connection,string id_connection)
         {

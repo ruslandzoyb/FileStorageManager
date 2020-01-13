@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using BL.Configuration.TokenServices;
@@ -9,9 +10,12 @@ using DAL.Context;
 using DAL.Interfaces.UnitOfWork;
 using DAL.Models.IdentityModels;
 using DAL.UOW;
+using LoggerSevice.Interface;
+using LoggerSevice.Logger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +26,7 @@ using Microsoft.Extensions.Logging;
 
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using NLog;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace API
@@ -30,6 +35,7 @@ namespace API
     {
         public Startup(IConfiguration configuration)
         {
+            LogManager.LoadConfiguration(String.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
             Configuration = configuration;
         }
 
@@ -39,8 +45,8 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
 
-            
-            
+
+            services.AddSingleton<ILoggerManager, LoggerManager>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -73,10 +79,7 @@ namespace API
                 c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 
             });
-            //services.AddSwaggerGen(c =>
-            //{
-            //    c.SwaggerDoc("v1", new Info { Title = "Values Api", Version = "v1" });
-            //});
+           
             services.AddHttpContextAccessor();
 
 
@@ -96,6 +99,8 @@ namespace API
               services.AddTransient<IAdminService, AdminService>();
             services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<ILinkService, LinkService>();
+           
+
 
             services.AddAuthentication(x => {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -147,10 +152,13 @@ namespace API
         {
             if (env.IsDevelopment())
             {
+
                 app.UseDeveloperExceptionPage();
+
             }
-           
-            
+             
+        
+
 
             app.UseRouting();
             // app.UseAuthentication();

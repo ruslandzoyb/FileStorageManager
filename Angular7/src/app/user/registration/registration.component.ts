@@ -22,6 +22,7 @@ export class RegistrationComponent implements OnInit {
         if (res.succeeded) {
           this.service.formModel.reset();
           this.toastr.success('New user created!', 'Registration successful.');
+          
         } else {
           res.errors.forEach(element => {
             switch (element.code) {

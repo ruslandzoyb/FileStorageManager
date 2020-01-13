@@ -21,12 +21,12 @@ namespace DAL.Repository
         }
         public async void Create(User item)
         {
-            if (item == null)
+            if (item !=null)
             {
-                throw new ArgumentNullException(nameof(item));
+                await context.Users.AddAsync(item);
             }
 
-            await context.Users.AddAsync(item);
+           
         }
 
         public void Delete(int? id)
@@ -36,10 +36,7 @@ namespace DAL.Repository
             {
                 context.Users.Remove(user);
             }
-            else
-            {
-                //todo :
-            }
+            
         }
         public void Delete(User user)
         {
@@ -48,19 +45,11 @@ namespace DAL.Repository
 
         public async Task<User> Get(int? id)
         {
-            var user = await context.Users.Include(x => x.Files).ThenInclude(y => y.Link)
+           return await context.Users.Include(x => x.Files).ThenInclude(y => y.Link)
                  .Include(x => x.Files).ThenInclude(y => y.Path)
                  .Include(x => x.Files).ThenInclude(y => y.Type)
                  .Include(x => x.Files).ThenInclude(y => y.Status).FirstAsync();
-            if (user != null)
-            {
-                return user;
-            }
-            else
-            {
-                //todo :ex
-                throw new Exception();
-            }
+           
 
         }
 
@@ -71,52 +60,34 @@ namespace DAL.Repository
 
         public async Task<IEnumerable<User>> GetList()
         {
-            var users = await context.Users
-                //.Include(x => x.Files).ThenInclude(y => y.Link)
-                //.Include(x => x.Files).ThenInclude(y => y.Path)
-                //.Include(x => x.Files).ThenInclude(y => y.Type)
-                //.Include(x => x.Files).ThenInclude(y => y.Status)
+            return await context.Users
+                .Include(x => x.Files).ThenInclude(y => y.Link)
+                .Include(x => x.Files).ThenInclude(y => y.Path)
+                .Include(x => x.Files).ThenInclude(y => y.Type)
+                .Include(x => x.Files).ThenInclude(y => y.Status)
                 .ToListAsync();
-            if (users != null)
-            {
-                return users;
-            }
-            else
-            {
-                //todo:ex
-                throw new Exception();
-            }
-
-
-
-
-
-
+           
+                                                  
         }
 
         public async Task<IEnumerable<User>> Query(Expression<Func<User, bool>> filter)
         {
-            var users = await context.Users
+           return await context.Users
                 .Include(x => x.Files).ThenInclude(y => y.Link)
                 .Include(x => x.Files).ThenInclude(y => y.Path)
                 .Include(x => x.Files).ThenInclude(y => y.Type)
                 .Include(x => x.Files).ThenInclude(y => y.Status)
                 .Where(filter)
                 .ToListAsync();
-            if (users != null)
-            {
-                return users;
-            }
-            else
-            {
-                //todo :ex
-                throw new Exception();
-            }
+           
         }
 
         public void Update(User item)
         {
-            //Todo :Update !!!!!
+            if (item != null)
+            {
+                context.Entry(item).State = EntityState.Modified;
+            }
         }
     }
 }

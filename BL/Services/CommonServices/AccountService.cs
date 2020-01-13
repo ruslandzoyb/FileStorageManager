@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using BL.ModelsDTO.OtherModels;
+using System.Threading.Tasks;
 
 namespace BL.Services.CommonServices
 {
@@ -25,12 +26,14 @@ namespace BL.Services.CommonServices
         IUnitOfWork database;
         UserManager<ApplicationUser> userManager;
         RoleManager<IdentityRole> rolesManger;
+        SignInManager<ApplicationUser> signManager;
         private IMapper mapper;
-        public AccountService(IUnitOfWork database,UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> rolesManger)
+        public AccountService(IUnitOfWork database,UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> rolesManger, SignInManager<ApplicationUser> signManager)
         {
             this.userManager = userManager;
             this.database = database;
             this.rolesManger = rolesManger;
+            this.signManager = signManager;
             mapper= new MapperConfiguration(ctg => ctg.AddProfile(new MapperSet())).CreateMapper();
 
             //todo :inject !!!!!!!!
@@ -55,7 +58,7 @@ namespace BL.Services.CommonServices
             };
             var role = rolesManger.CreateAsync(new IdentityRole()
             {
-                Name = "Admin"
+                Name = "User"
 
             }).Result;
 
@@ -161,5 +164,7 @@ namespace BL.Services.CommonServices
 
 
         }
+
+        
     }
 }
