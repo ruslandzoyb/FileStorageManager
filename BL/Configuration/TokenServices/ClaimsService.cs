@@ -18,6 +18,7 @@ namespace BL.Configuration.TokenServices
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimsIdentity.DefaultNameClaimType,user.Id),
+                    new Claim("Name",user.UserName)
                     
                     
 

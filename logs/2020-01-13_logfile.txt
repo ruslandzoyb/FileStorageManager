@@ -15,3 +15,37 @@
 2020-01-13 19:49:34.5586 INFO User was created
 2020-01-13 19:51:37.4793 INFO Someone is trying to register in role User
 2020-01-13 19:51:38.1575 INFO User was created
+2020-01-13 20:07:29.8568 INFO Someone is trying to register in role User
+2020-01-13 20:09:04.7208 INFO Someone is trying to register in role User
+2020-01-13 20:09:05.5611 ERROR Something went wrong with registration
+2020-01-13 20:12:29.3768 INFO Someone is trying to register in role User
+2020-01-13 20:17:15.3654 INFO Someone is trying to register in role User
+2020-01-13 20:17:49.8124 INFO User was created
+2020-01-13 20:25:09.4799 INFO Someone is trying to register in role User
+2020-01-13 20:25:43.5864 INFO Admin was created by  beb09b76-4da8-40d8-979b-21e0464ae3b5 
+2020-01-13 22:04:53.5575 INFO Someone is trying to Login
+2020-01-13 22:04:54.1673 INFO User logged in 
+2020-01-13 22:06:41.2919 INFO Someone is trying to Login
+2020-01-13 22:06:41.7866 INFO User logged in 
+2020-01-13 22:09:12.3236 INFO Someone is trying to Login
+2020-01-13 22:09:12.8116 INFO User logged in 
+2020-01-13 22:12:10.8854 INFO Someone is trying to Login
+2020-01-13 22:12:11.3761 INFO User logged in 
+2020-01-13 22:22:37.4882 INFO Someone is trying to Login
+2020-01-13 22:22:38.0274 INFO User logged in 
+2020-01-13 22:23:08.5410 INFO Someone is trying to Login
+2020-01-13 22:23:08.5991 INFO User logged in 
+2020-01-13 22:32:45.3624 INFO Someone is trying to Login
+2020-01-13 22:32:45.9255 INFO User logged in 
+2020-01-13 22:37:21.8692 INFO Someone is trying to Login
+2020-01-13 22:37:21.8945 INFO User logged in 
+2020-01-13 22:38:34.9480 INFO Alex is trying to delte account
+2020-01-13 22:38:35.3328 INFO Alex was removed
+2020-01-13 23:07:31.8562 INFO Someone is trying to Login
+2020-01-13 23:07:32.5156 INFO User logged in 
+2020-01-13 23:12:03.2462 INFO Someone is trying to Login
+2020-01-13 23:12:03.8838 INFO User logged in 
+2020-01-13 23:12:03.9896 INFO Someone is trying to Login
+2020-01-13 23:12:04.0137 INFO User logged in 
+2020-01-13 23:15:38.0313 INFO Someone is trying to Login
+2020-01-13 23:15:38.5906 INFO User logged in 

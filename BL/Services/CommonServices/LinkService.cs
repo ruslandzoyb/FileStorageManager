@@ -9,6 +9,8 @@ using System.Text;
 
 using Microsoft.AspNetCore.Mvc;
 using BL.ModelsDTO.OtherModels;
+using Exeptions.CE;
+using BL.Configuration.FileManaging;
 
 namespace BL.Services.CommonServices
 {
@@ -24,36 +26,34 @@ namespace BL.Services.CommonServices
         public FileDownloadModel Download(string link)
         {
 
-            var file = mapper.Map<FileDTO>(database.Links.Get(x => x.Code == link).Result.File);
+            var id = database.Links.Get(x => x.Code == link).Result.Id;
+            var file = mapper.Map<FileDTO>(database.Files.Get(x => x.Link.Id == id).Result);
             if (file!=null)
             {
-                var download = new FileDownloadModel()
-                {
-                    Array = System.IO.File.ReadAllBytes(file.Path.Link),
-                    Name = file.Name,
-                    Type = file.Type.Format
-                };
-                //todo :Ex
-                return download != null ? download : throw new Exception();
+                return FileManagment.DownloadFile(file);
             }
-            else
-            {
-                //todo :Ex
-                throw new Exception();
-            }
-            }
+            throw new LinkServiceException("File is null");
+            
+           
+        }
 
 
         public FileDTO GetPath(string link)
         {
             if (link!=null)
             {
-                var file = mapper.Map<FileDTO>(database.Links.Get(x => x.Code == link).Result.File);
-                return file != null ? file : throw new Exception();
+                var id = database.Links.Get(x => x.Code == link).Result.Id;
+                var file = mapper.Map<FileDTO>(database.Files.Get(id).Result);
+                if (file!=null)
+                {
+                    return file != null ? file : throw new Exception();
+                }
+                throw new LinkServiceException("File is null");
+                
             }
             else
             {
-                throw new Exception();
+                throw new LinkServiceException("Link is null");
             }
         }
     }

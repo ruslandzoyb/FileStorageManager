@@ -4,6 +4,7 @@ using BL.Interfaces.OrdersInterfaces;
 using BL.ModelsDTO.ApplicationModels;
 using BL.ModelsDTO.OtherModels;
 using DAL.Models.IdentityModels;
+using Exeptions.CE;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -46,14 +47,19 @@ namespace BL.Services.CommonServices
             }
             else
             {
-                //todo:Ex
-                throw new Exception();
+                
+                throw new RoleException("Role is null");
             }
         }
 
         public string Delete(string role)
         {
-           var r = roleManager.FindByNameAsync(role).Result;
+            if (string.IsNullOrEmpty(role))
+            {
+                throw new RoleException("Role is null");
+            }
+
+            var r = roleManager.FindByNameAsync(role).Result;
             if (r!=null)
             {
                var result= roleManager.DeleteAsync(r).Result;
@@ -63,18 +69,19 @@ namespace BL.Services.CommonServices
                 }
                 else
                 {
-                    throw new Exception();
+                    throw new RoleException("Role couldn't be removed");
                 }
             }
             else
             {
-                throw new Exception();
+                throw new RoleException("Role wasn't found");
             }
         }
 
         public IEnumerable<RoleModel> GetRoles()
         {
             var roles = roleManager.Roles.ToListAsync().Result;
+            
             var model=new List<RoleModel>();
             if (roles!=null)
             {
@@ -91,8 +98,7 @@ namespace BL.Services.CommonServices
             }
             else
             {
-                //todo :Ex
-                throw new Exception();
+                throw new RoleException("Roles are null");
             }
            
 
@@ -100,9 +106,9 @@ namespace BL.Services.CommonServices
 
         public IEnumerable<ApplicationUserDTO> GetUsersByRole(string role)
         {
-            if (role is null)
+            if (role == null)
             {
-                throw new ArgumentNullException(nameof(role));
+                throw new RoleException("Role is null or empty");
             }
             else
             {
@@ -113,8 +119,7 @@ namespace BL.Services.CommonServices
                 }
                 else
                 {
-                    //todo :Ex
-                    throw new Exception();
+                    throw new RoleException("Users are null");
                 }
             }
         }

@@ -27,7 +27,7 @@ namespace DAL.Repository
                 await context.Links.AddAsync(item);
             }
         }
-        //Todo :add else block
+        
         public void Delete(int? id)
         {
             var link = Get(id).Result;
@@ -35,10 +35,7 @@ namespace DAL.Repository
             {
                 context.Links.Remove(link);
             }
-            else
-            {
-                //todo :
-            }
+            
         }
         public void Delete(Link link)
         {
@@ -54,8 +51,11 @@ namespace DAL.Repository
 
         public Task<Link> Get(Expression<Func<Link, bool>> filter)
         {
-           return context.Links .Include(x=>x.File).Where(filter).SingleOrDefaultAsync();
-            
+           return context.Links
+                 .Include(x=>x.File)
+                .Where(filter).SingleOrDefaultAsync();
+
+
         }
 
         public async Task<IEnumerable<Link>> GetList()

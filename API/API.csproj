@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BL\BL.csproj" />
-    <ProjectReference Include="..\DAL\DAL.csproj" />
     <ProjectReference Include="..\LoggerSevice\LoggerSevice.csproj" />
   </ItemGroup>
 

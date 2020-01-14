@@ -15,10 +15,11 @@ using File = DAL.Models.CommonModels.File;
 using System.Xml;
 using BL.Configuration;
 using BL.Configuration.FileManaging;
+using Exeptions.CE;
 
 namespace BL.Services.CommonServices
 {
-   public class UserService:IUserService
+   public class UserService: IUserService
     {
         protected IUnitOfWork database;
          protected IMapper mapper;
@@ -114,53 +115,33 @@ namespace BL.Services.CommonServices
 
     public  FileDownloadModel Download(string link)
     {
-            try
+            if (string.IsNullOrEmpty(link))
             {
-                var id = database.Links.Get(x => x.Code == link).Result.Id;
-                var file = mapper.Map<FileDTO>(database.Files.Get(x => x.Link.Id == id).Result);
-                if (file != null)
-                {
-                    var download = new FileDownloadModel()
-                    {
-                        Array = System.IO.File.ReadAllBytesAsync((file.Path.Link)).Result,
-                        Name = file.Name + file.Type.Format,
-                        Type = "application/" + file.Type.Format
-                    };
-                    //todo :Ex
-                    return download != null ? download : throw new Exception();
-                }
-                else
-                {
-                    //todo :Ex
-                    throw new Exception();
-                }
+                throw new UserServiceException("Link is null or empty");
             }
-            catch (Exception)
-            {
 
-                throw;
+            var id = database.Links.Get(x => x.Code == link).Result.Id;
+           
+                var file = mapper.Map<FileDTO>(database.Files.Get(x => x.Link.Id == id).Result);
+            if (file!=null)
+            {
+                return FileManagment.DownloadFile(file);
             }
+            throw new UserServiceException("File is null");
+                    
+           
             
         }
         public FileDownloadModel Download(int? id)
         {
-            var file = database.Files.Get(id).Result;
+            var file = mapper.Map<FileDTO>(database.Files.Get(id).Result);
             if (file!=null)
             {
-               
-                var download = new FileDownloadModel()
-                {
-                    Array = System.IO.File.ReadAllBytesAsync((file.Path.Link)).Result,
-                    Name = file.Name+file.Type.Format,
-                    Type = "application/" + file.Type.Format
-                };
-                //todo :Ex
-                return download != null ? download : throw new Exception();
+                return FileManagment.DownloadFile(file);
             }
-            else
-            {
-                throw new Exception();
-            }
+            throw new UserServiceException("File is null");
+            
+           
         }
 
         public IEnumerable<FileDTO> Find(Expression<Func<File, bool>> predicate)
@@ -187,7 +168,7 @@ namespace BL.Services.CommonServices
         }
         else
         {
-            throw new Exception();
+                throw new UserServiceException("File wasn't found or file doesen't belong to user");
         }
     }
 
@@ -200,8 +181,8 @@ namespace BL.Services.CommonServices
         }
         else
         {
-            //todo :ex
-            throw new Exception();
+                
+                throw new UserServiceException("Files are null");
         }
     }
 
@@ -237,8 +218,8 @@ namespace BL.Services.CommonServices
         }
         else
         {
-            //todo :ex
-            throw new Exception();
+                //todo :ex
+                throw new UserServiceException("File wasn't found");
         }
     }
 
@@ -247,22 +228,30 @@ namespace BL.Services.CommonServices
         public bool Upload(FileUploadModel file)
         {
 
-            var path = FileSaver.GeneratePath(file);
-
-           
+                       
             var status = database.Statuses.Get(x => x.Title == "Closed").Result;
             var user = database.Users.Get(x => x.IdenityId == file.UserId).Result;
-            
-
-
-            var type = new DAL.Models.CommonModels.Type()
+            if (user==null)
             {
-                Format = path.Format
-            };
+                throw new UserServiceException("User wasn't found");
+            }
+            var ex = System.IO.Path.GetExtension(file.File.FileName);
 
-            
+            var type = database.Types.Get(x => x.Format ==ex).Result;
+            if (type==null)
+            {
+                type =new DAL.Models.CommonModels.Type
+                {
+                    Format = ex
+                };
 
-            
+            }
+
+
+            var path = FileManagment.GeneratePath(file);
+
+
+
             var file_tosave = new File()
             {
                 Status = status,
@@ -286,7 +275,13 @@ namespace BL.Services.CommonServices
         public IEnumerable<FileDTO> GetList()
         {
           var files=mapper.Map<List<FileDTO>>(database.Files.GetList().Result.ToList());
-            return files;
+
+            if (files!=null)
+            {
+                return files;
+            }
+            throw new UserServiceException("Files are null");
+            
         }
 
        

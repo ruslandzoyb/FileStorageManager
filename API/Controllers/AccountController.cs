@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 using DAL.UOW;
 using Microsoft.Extensions.Logging;
 using LoggerSevice.Interface;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace API.Controllers
 {
@@ -32,10 +33,10 @@ namespace API.Controllers
             this.service = service;
             this.logger = logger;
             mapper = new MapperConfiguration(ctr => ctr.AddProfile(new API.Mapper.MapperSetAPI())).CreateMapper();
-            //file = new DAL.Repository.FileRepository(new DAL.Context.ApplicationContext());
+           
             
         }
-        // GET: api/Account
+       
         
 
         [HttpPost]
@@ -74,21 +75,25 @@ namespace API.Controllers
         [Route("Login")]
         public IActionResult Login([FromQuery] LoginModelView model)
         {
+            logger.LogInfo("Someone is trying to Login");
             if (ModelState.IsValid)
             {
                 var login = mapper.Map<BL.ModelsDTO.ApplicationModels.LoginModelDTO>(model);
+               
                 var message = service.Login(login);
-                
+
+                logger.LogInfo($"User logged in ");
                 return Ok(message);
                 
             }
             else
             {
+                logger.LogError("Authorization failed");
                 return NotFound();
             }
         }
 
-      
+     
 
 
         [HttpGet]
@@ -97,31 +102,29 @@ namespace API.Controllers
         
         public IActionResult Delete([FromQuery] DeleteAccModelView model)
         {
+
+            var userName = User.Claims.FirstOrDefault(x => x.Type == "Name")?.Value;
+            logger.LogInfo($"{userName} is trying to delete account");
             var delete = mapper.Map<BL.ModelsDTO.OtherModels.DeleteAccModel>(model);
             delete.Id = User.Identity.Name;
             var message = service.DeleteAccount(delete);
             if (message!=null)
             {
+                logger.LogInfo($"{userName} was removed ,Id - {delete.Id} , Reason - {model.Reason}");
                 return  Ok(message);
             }
             else
             {
+                logger.LogError($"User wasn't removed");
                 return NotFound();
             }
         }
-          [HttpGet]
-          [Authorize]
-          [Route("LogOut")]
-          public IActionResult LogOut()
-        {
-             
-            return Ok();
-        }
+        
        
     }
-   public class MyClass
-    {
-        public string Id { get; set; }
-        public int Name { get; set; }
-    }
+   //public class MyClass
+   // {
+   //     public string Id { get; set; }
+   //     public int Name { get; set; }
+   // }
 }

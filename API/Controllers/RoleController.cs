@@ -36,22 +36,25 @@ namespace API.Controllers
 
 
         [HttpDelete]
-        public IActionResult Delete([FromForm] string role)
+        [Route("DeleteRole")]
+        public IActionResult Delete([FromQuery] string role)
         {
             service.Delete(role);
             return Ok();
         }
 
         [HttpGet]
+        [Route("Roles")]
        public IActionResult GetRoles()
         {
-            return Ok(mapper.Map<RoleViewModel>(service.GetRoles()));
+            return Ok(mapper.Map<List<RoleViewModel>>(service.GetRoles()));
         }
 
         [HttpGet]
-        public IActionResult GetRoles([FromQuery] string role)
+        [Route("Users")]
+        public IActionResult Users([FromQuery] string role)
         {
-          return Ok(mapper.Map<ApplicationUserView>(service.GetUsersByRole(role)));
+          return Ok(mapper.Map<List<ApplicationUserView>>(service.GetUsersByRole(role)));
         }
         
        

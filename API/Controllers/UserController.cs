@@ -98,12 +98,12 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        
+
         [Route("Download")]
         public FileResult Download([FromQuery] string link)
         {
             var download = mapper.Map<DownloadViewModel>(service.Download(link));
-            if (download!=null)
+            if (download != null)
             {
                 return File(download.Array, download.Type, download.Name);
             }
@@ -111,6 +111,18 @@ namespace API.Controllers
             {
                 throw new Exception();
             }
+        }
+
+
+        [HttpGet]
+        [Route("DownloadbyId")]
+        public FileResult Download([FromQuery] int? id)
+        {
+            var file = service.Download(id);
+            
+                return File(file.Array, file.Type, file.Name);
+            
+            
         }
 
         [HttpPost]

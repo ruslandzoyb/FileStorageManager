@@ -1,0 +1,29 @@
+2020-01-14 00:05:01.2833 INFO Someone is trying to Login
+2020-01-14 00:05:01.8482 INFO User logged in 
+2020-01-14 00:53:54.9666 INFO Someone is trying to Login
+2020-01-14 00:56:07.2005 INFO Someone is trying to Login
+2020-01-14 00:58:37.9117 INFO Someone is trying to Login
+2020-01-14 00:58:38.5809 INFO User logged in 
+2020-01-14 01:06:27.0120 INFO Someone is trying to Login
+2020-01-14 01:06:27.7129 INFO User logged in 
+2020-01-14 01:08:54.6375 INFO Someone is trying to Login
+2020-01-14 01:09:30.8719 INFO Someone is trying to Login
+2020-01-14 01:09:31.3995 INFO User logged in 
+2020-01-14 01:11:25.6879 INFO Someone is trying to Login
+2020-01-14 01:11:26.2946 INFO User logged in 
+2020-01-14 02:00:28.6355 INFO Someone is trying to Login
+2020-01-14 02:00:29.3006 INFO User logged in 
+2020-01-14 02:07:48.4806 INFO Someone is trying to register in role User
+2020-01-14 02:07:48.6809 INFO User was created
+2020-01-14 02:08:20.4948 INFO Someone is trying to Login
+2020-01-14 02:08:20.5259 INFO User logged in 
+2020-01-14 02:23:49.4531 INFO Someone is trying to Login
+2020-01-14 02:23:50.0398 INFO User logged in 
+2020-01-14 02:33:07.1476 INFO Someone is trying to Login
+2020-01-14 02:33:07.8868 INFO User logged in 
+2020-01-14 02:39:05.1515 INFO Someone is trying to Login
+2020-01-14 02:39:05.6637 INFO User logged in 
+2020-01-14 02:48:39.8891 INFO Someone is trying to Login
+2020-01-14 02:48:40.4771 INFO User logged in 
+2020-01-14 02:51:25.4239 INFO Kane is trying to delete account
+2020-01-14 02:51:26.0213 INFO Kane was removed ,Id - aeb6c1b8-85d6-4418-b467-9158396e0edd , Reason - Expensive service

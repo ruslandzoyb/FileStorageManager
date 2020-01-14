@@ -32,6 +32,21 @@ namespace API.Controllers
             return Ok(file);
         }
 
+        [HttpGet]
+        [Route("Download")]
+        public FileResult Download([FromQuery] string link)
+        {
+            var download = mapper.Map<DownloadViewModel>(service.Download(link));
+            if (download != null)
+            {
+                return File(download.Array, download.Type, download.Name);
+            }
+            else
+            {
+                throw new Exception();
+            }
+        } 
+
 
     }
 }

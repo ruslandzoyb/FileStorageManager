@@ -30,11 +30,7 @@ namespace DAL.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //использование Fluent API
-
-            //modelBuilder.Entity<Status>()
-            //    .HasIndex(x => new { x.Id, x.Title });
-
+           
 
 
 
@@ -60,6 +56,7 @@ namespace DAL.Context
                 .WithMany(g => g.Files)
                 .OnDelete(DeleteBehavior.SetNull);
 
+           
 
             modelBuilder.Entity<File>()
                    .HasOne(x => x.Type)
@@ -71,43 +68,23 @@ namespace DAL.Context
                 .WithOne(x => x.User)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            //modelBuilder.Entity<File>()
-            //    .Property(x => x.User)
-            //    .IsRequired();
-
 
 
 
             modelBuilder.Entity<User>()
                 .HasKey(x => x.IdenityId);
 
-            //modelBuilder.Entity<User>()
-            //    .Property(x => x.FullName)
-            //    .HasMaxLength(30)
-            //    .IsRequired();
+         
 
             modelBuilder.Entity<User>()
                 .Property(x => x.IdenityId)
                 .ValueGeneratedNever();
 
-            //modelBuilder.Entity<User>()
-            //      .HasMany(x => x.Files)
-            //      .WithOne(x => x.User);
-
-            //modelBuilder.Entity<File>().Property(x => x.Link).IsRequired(false);
-            //modelBuilder.Entity<File>().Property(x => x.Name).IsRequired(true);
-            //modelBuilder.Entity<File>().Property(x => x.Type).IsRequired(true);
-            //modelBuilder.Entity<File>().Property(x => x.Path).IsRequired(true);
+           
 
             modelBuilder.Entity<File>().Property(x => x.Name).HasMaxLength(30);
             modelBuilder.Entity<File>().Property(x => x.Description).HasMaxLength(100);
-            //modelBuilder.Entity<File>().Property(x => x.Status).HasDefaultValue(new Status()
-            //{
-            //    Title = "Private"
-            //});
-
-            //modelBuilder.Entity<File>().Property(x => x.Creation)
-            //    .HasComputedColumnSql($"SELECT ADDDATE({DateTime.Now})");
+           
 
 
 

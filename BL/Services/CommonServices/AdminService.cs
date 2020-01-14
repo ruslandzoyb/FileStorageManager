@@ -7,6 +7,7 @@ using BL.ModelsDTO.OtherModels;
 using DAL.Interfaces.UnitOfWork;
 using DAL.Models.CommonModels;
 using DAL.Models.IdentityModels;
+using Exeptions.CE;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -34,7 +35,13 @@ namespace BL.Services.CommonServices
 
         public string DeleteUser(string id)
         {
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new AdminServiceException("Id is null");
+            }
+
             var iden_user = manager.FindByIdAsync(id).Result;
+            
             if (iden_user != null)
             {
                 var name = iden_user.UserName;
@@ -48,13 +55,13 @@ namespace BL.Services.CommonServices
                 }
                 else
                 {
-                    throw new Exception();//todo :ex
+                    throw new AdminServiceException("User couldn't be found");
                 }
 
             }
             else
             {
-                throw new Exception(); //todo :ex
+                throw new AdminServiceException("User wasn't found");
             }
         }
 
@@ -90,13 +97,18 @@ namespace BL.Services.CommonServices
             {
                 return files;
             }
-            throw new Exception();
+            throw new AdminServiceException("Files were not found");
         }
 
         public Task<List<ApplicationUser>> GetIdentityUsers()
         {
             var users = manager.Users.ToListAsync();
-            return users;
+            if (users!=null)
+            {
+                return users;
+            }
+            throw new AdminServiceException("Users are null");
+            
         }
 
         public IEnumerable<StatusDTO> GetStatuses()
@@ -108,8 +120,8 @@ namespace BL.Services.CommonServices
             {
                 return statuses;
             }
-            //todo :Ex
-            throw new NotImplementedException();
+            
+            throw new AdminServiceException("Statuses are null");
         }
 
         public IEnumerable<TypeDTO> GetTypes()
@@ -122,37 +134,40 @@ namespace BL.Services.CommonServices
             {
                 return categories;
             }
-            throw new Exception();//todo:ex
+            throw new AdminServiceException("Categories are null");
 
 
         }
 
         public UserDTO GetUser(string id)
         {
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new AdminServiceException("Id is null or empty");
+            }
+
             var user = mapper.Map<UserDTO>(database.Users.Get(x=>x.IdenityId==id).Result);
             if (user != null)
             {
                 return user;
 
             }
-            else
-            {
-                throw new Exception();//todo :ex
-            }
+            throw new AdminServiceException("User is null");
         }
 
         public ApplicationUserDTO GetUserInfo(string id)
         {
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new AdminServiceException("Id is null");
+            }
+
             var user = mapper.Map<ApplicationUserDTO>(manager.FindByIdAsync(id).Result);
             if (user != null)
             {
                 return user;
             }
-            else
-            {
-                throw new Exception(); //todo :ex
-
-            }
+            throw new AdminServiceException("User is null");
         }
 
         public IEnumerable<UserDTO> GetUsers()
@@ -164,7 +179,7 @@ namespace BL.Services.CommonServices
             }
             else
             {
-                throw new Exception();
+                throw new AdminServiceException("Users are null");
             }
         }
     }

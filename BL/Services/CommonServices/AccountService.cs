@@ -20,6 +20,8 @@ using BL.ModelsDTO.OtherModels;
 using System.Threading.Tasks;
 using System.Linq;
 using BL.Configuration.FileManaging;
+using Exeptions.CE;
+using BL.Configuration;
 
 namespace BL.Services.CommonServices
 {
@@ -29,7 +31,7 @@ namespace BL.Services.CommonServices
         UserManager<ApplicationUser> userManager;
         RoleManager<IdentityRole> rolesManger;
         SignInManager<ApplicationUser> signManager;
-        private IMapper mapper;
+         IMapper mapper;
         public AccountService(IUnitOfWork database,UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> rolesManger, SignInManager<ApplicationUser> signManager)
         {
             this.userManager = userManager;
@@ -38,16 +40,18 @@ namespace BL.Services.CommonServices
             this.signManager = signManager;
             mapper= new MapperConfiguration(ctg => ctg.AddProfile(new MapperSet())).CreateMapper();
 
-            //todo :inject !!!!!!!!
+            
 
         }
-        public void CreateAdmin(string model)
-        {
-            
-        }
+       
 
         public bool CreateUser(ApplicationUserDTO user)
         {
+            if (user is null)
+            {
+                throw new AccountException("User is null");
+            }
+
             var us = new ApplicationUser()
             {
                 Email = user.Email,
@@ -62,9 +66,9 @@ namespace BL.Services.CommonServices
            
 
             var create = userManager.CreateAsync(us, user.Password).Result;
-            if (create.Succeeded)
-            {
-                var roles = userManager.AddToRolesAsync(us, role).Result;
+            var roles = userManager.AddToRolesAsync(us, role).Result;
+           
+                
                 if (create.Succeeded && roles.Succeeded)
                 {
                     
@@ -74,7 +78,7 @@ namespace BL.Services.CommonServices
                         
                     }));
                     string path = userManager.GetUserIdAsync(us).Result;
-                    FileSaver.CreateFolder(path);
+                    FileManagment.CreateFolder(path);
 
 
 
@@ -85,22 +89,11 @@ namespace BL.Services.CommonServices
                 }
                 else
                 {
-                    return false;
-                }
+                throw new AccountException("User or Role wasn't created");
+                
             }
           
-            
-            
-            else
-            {
-                return false;
-            }
-            
-          
-            
-
-           
-           
+                       
         }
 
         public string DeleteAccount(DeleteAccModel model)
@@ -120,28 +113,34 @@ namespace BL.Services.CommonServices
                         var obj = database.Users.Get(x=>x.IdenityId==model.Id).Result;
                         database.Users.Delete(obj);
                         database.Save();
+                        FileManagment.RemoveFolder(model.Id);
                         return new string($"User {name} {surname} account was deleted cause of {model.Reason} ");
                     }
                     else
                     {
-                        throw new Exception();///todo :ex
+                        throw new AccountException("Removal failed");
                     }
                 }
                 else
                 {
-                    throw new Exception();//todo: ex
+                    throw new AccountException("Password was not confirmed");
                 }
                
             }
             else
             {
-                throw new ArgumentNullException(nameof(model));//todo :ex
+                throw new AccountException("Delete model is null");
             }
         }
 
         public   string Login(LoginModelDTO model)
         {
-           
+            if (model is null)
+            {
+                throw new AccountException("Login model is null");
+            }
+
+
             var user =  userManager.FindByEmailAsync(model.Email).Result;
             
 
@@ -156,13 +155,13 @@ namespace BL.Services.CommonServices
                 }
                 else
                 {
-                    throw new Exception();
+                    throw new AccountException("Claims are null");
                 }
                 
             }
             else
             {
-                throw new Exception();
+                throw new AccountException("Password was not confirmed");
             }
 
            

@@ -16,10 +16,10 @@ namespace BL.Interfaces.OrdersInterfaces
         bool Upload(FileUploadModel file);
         FileDownloadModel Download(int? id);
         bool Delete(int? id,string user_id);
-        ChangeStatusView ChangeStatus(ChangeStatusModel model);// id,status;
+        ChangeStatusView ChangeStatus(ChangeStatusModel model);
 
         IEnumerable<FileDTO> Find(Expression<Func<File, bool>> predicate);
-        string InfoByFile(int? id,string user_id); // model -file info , id -file id
+        string InfoByFile(int? id,string user_id); 
 
         // Additional
         //void MakeCommon(Model model); //email,file id
